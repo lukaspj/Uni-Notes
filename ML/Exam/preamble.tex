@@ -1,0 +1,19 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{pgfplots}
+\usepackage{float}
+
+\renewcommand{\Re}{\mathbb{R}}
+\newcommand{\Li}{\mathcal{L}}
+
+\newcommand{\sigmoidPlot}{
+    
+    \begin{tikzpicture}
+        \begin{axis}[xmin=-5, xmax=5, ymin=0, ymax=1, samples=150]
+        \addplot[red, ultra thick] {1/(1+exp(-x))};
+        \end{axis}
+    \end{tikzpicture}
+    
+    }
