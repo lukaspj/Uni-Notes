@@ -117,6 +117,17 @@
     \end{equation}
     with probability $\geq 1-\delta$
     
+    VC-Dimension captures expressiveness/capacity of hypothesis spaces and 
+    relate them to generalization. Leads to out-of-sample error equals 
+    in-sample-error + model complexity:
+    \begin{equation*}
+    E_{out}(h) \leq E_{in}(h) + \Omega(N,\Hy, \delta)
+    \end{equation*}
+    \begin{equation*}
+    \Omega(N, \Hy, \delta) = \sqrt{\frac{8}{N}\ln\frac{4m_\Hy(2N)}{\delta}}
+    \end{equation*}
+    \todo{Sampling	Complexity}
+    
     \subsection{Bias-Variance decomposition}
     \textit{Page 62}\\
     The out-of-sample error for hypothesis $g^{(D)}$ learned on data $D$ is:
@@ -140,7 +151,7 @@
     we denote by $\bar{g}(x)$ it can be seen as an average function as a result 
     of many data-sets $D_1,\dots,D_K$ where:
     \begin{equation}
-        \bar{g}(x)\simeq \frac{1}{K} \sum_{k=1}^{K}g_k(x)
+        \bar{g}(x)\approx \frac{1}{K} \sum_{k=1}^{K}g_k(x)
     \end{equation}
     
     We can now rewrite the expected out-of-sample error in terms of $\bar{g}$:
@@ -175,15 +186,6 @@
     \end{align*}
     \textit{Bias:} How well can we actually fit - on average\\
     \textit{Variance:} How much will data samples lead me astray - on average
-    VC-Dimension captures expressiveness/capacity of hypothesis spaces and 
-    relate them to generalization. Leads to out-of-sample error equals 
-    in-sample-error + model complexity:
-    \begin{equation*}
-        E_{out}(h) \leq E_{in}(h) + \Omega(N,\Hy, \delta)
-    \end{equation*}
-    \begin{equation*}
-        \Omega(N, \Hy, \delta) = \sqrt{\frac{8}{N}\ln\frac{4m_\Hy(2N)}{\delta}}
-    \end{equation*}
     
     We cannot compute actual bias and variance in practice, since they depend 
     on the target function and input probability distribution. So it is a 
@@ -192,4 +194,135 @@
     There are two typical goals: we want to reduce the variance without 
     significantly increasing bias et vice versa. These goals are achieved 
     through heuristics, regularization being one them.
+    
+    \subsection{Regularization}
+    In learning, we want to achieve two things:
+    \begin{enumerate}
+        \item Ensure that out-of-sample error is close to in-sample-error \\
+        $\Pr\left[|E_{in} - E_{out}| > \epsilon\right] \leq 
+        2Me^{-2\epsilon^2N}$ or:\\
+        $E_{out}(h)\leq E_{in}(h)+\Omega(N,\Hy,\delta)$ 
+        \item Minimize in-sample-error $E_{in}$
+    \end{enumerate}
+    So far we have looked at how to prevent underfitting, i.e. how do we fit 
+    our data as well as possible. Regularization is about preventing 
+    over-fitting, i.e. if we fit our data really well, then our in-sample-error 
+    might be really low $E_{in}=0$, but it's no longer close to the 
+    out-of-sample-error $E_{out}>>E_{in}$
+    
+    This happens because we fit the noise rather than the signal, if we look at 
+    the target complexity, e.g. for some polynomial, then if we try to fit it 
+    with a hypothesis of $h_{10}$, then as the target complexity increases 
+    there will be more and more data that our hypothesis cannot capture, so 
+    even though it is not stochastic noise, it wil look like noise to our 
+    hypothesis. This is reflected in the fact that:
+    \begin{itemize}
+        \item Data increases $\rightarrow$ Overfitting Decreases
+        \item Noise increases $\rightarrow$ Overfitting Increases
+        \item Target Complexity Increases $\rightarrow$ Overfitting Increases
+    \end{itemize}
+    So increasing the target complexity seems to introduce noise similar to 
+    increasing the noise. In order to avoid this, we want to fit it in a 
+    ``simpler'' way, so we avoid the precise fitting we get from our current 
+    techniques.
+    
+    In linear regression, this is what we currently minimize:
+    \begin{equation*}
+        E_{in} = \frac{1}{|D|} \sum_{x,y \in D}(w^Tx-y)^2
+    \end{equation*}
+    If we instead, for different values of $\alpha$, minimize:
+    \begin{equation*}
+    E_{in}+\Omega(h) = \frac{1}{|D|} \sum_{x,y \in D}(w^Tx-y)^2 + 
+    \alpha\|w\|^2_2
+    \end{equation*}
+    
+    Which gives us the constrained optimization:
+    \begin{align*}
+        \text{Minimize: }&\frac{1}{|D|}\sum_{x,y \in D} (w^Tx - y)^2\\
+        \text{Subject to: }&\lambda\|w\|^2_2\leq C
+    \end{align*}
+    Then we get the constrained hypothesis set $\Hy_{\text{Constrained}}$ where:
+    \begin{equation*}
+        \Hy_\text{Constrained} \subseteq \Hy \implies 
+        d_{vc}(\Hy_\text{Constrained}) \leq d_{vc}(\Hy)
+    \end{equation*}
+    So we get a simpler hypothesis set (even though $d_{vc}$ might be the 
+    same), which also means the variance should go down (as the regularization 
+    favors $h$'s that look alike, and rules out the ones that are specialized 
+    to a single data-set) although the bias should go up.\todo{why?}
+    
+    Then for e.g. linear regression we get that:
+    \begin{equation*}
+        \nabla_w=\frac{1}{n}(2X^TXw-2X^Ty) + \frac{\lambda w}{2n}
+    \end{equation*}
+    Which gives us that:
+    \begin{equation*}
+        w = (X^TX+\lambda I)^{-1}X^Ty
+    \end{equation*}
+    
+    For gradient descent, we get that when we minimize $E_{in} + \lambda 
+    \|w\|^2_2$, the gradient descent step that previously looked like:
+    \begin{equation*}
+        w_{t+1} = w_t - \alpha \nabla_w f(w_t)
+    \end{equation*}
+    will now become:
+    \begin{align*}
+        w_{t+1} &= w_t - \alpha \nabla_w E_{in}(w_t) - 2 \alpha \lambda w_t\\
+            &= w_t(1-2 \alpha \lambda) - \alpha \nabla_w E_{in}(w_t)
+    \end{align*}
+    Thus, every round the $(1-2\alpha \lambda)$ factor will make $w$ decay 
+    towards the zero vector.
+    
+    \subsection{Validation}
+    Regularization introduces the need for validation in order to be able to 
+    train on the data again and again with different values of $\lambda$. The 
+    need for validation becomes apparent without regularization in more 
+    advanced models (like Neural Networks) but regularization is the first 
+    technique we encounter.
+    
+    Validation simply means to take out $K$ points from the data-set and use 
+    them to validate the result of the training on the remaining $N-K$ points.
+    
+    Validation has the issue that as you increase $K$, the $E_{val}$ estimate 
+    tightens but it also increases, as you has less data to train on so 
+    $E_{out}$ increases with smaller $N-K$. Analytically:
+    \begin{equation*}
+        E_{val} = E_{out} \pm \bigO{\frac{\sigma}{\sqrt{K}}}
+    \end{equation*}
+    As a rule of thumb: $K=\frac{N}{5}$ (20\% of data). If we validate and try 
+    out different models with different $E_{val}(m_i)$, then we can pick the 
+    best and retrain on all the data, hoping that the model we chose is still 
+    the best.
+    
+    Usually if we have few hyperparameters, (like $\lambda$) then we can just 
+    perform grid search (exhaustively search through a range of parameters). If 
+    we have many hyperparameters, we should just do ``random sampling'' and 
+    repeatedly search on promising areas.
+    
+    We do, however risk that we now overfit on the validation parameters. So 
+    what we really want is a training set, a validation set \textit{and a test 
+    set}! We will usually split the data-set by $50/25/25\%$ or $60/20/20\%$ 
+    depending on the application and the data available.
+    
+    For small $K$ we get that $E_{out}(h_{all}) \approx E_{out}(h_{train})$ and 
+    for large $K$ we get $E_{out}(h_{train}) \approx E_{val}(h_{train})$, but 
+    we would like to have both of these.
+    
+    It turns out that setting $K=1$ and computing:
+    \begin{align*}
+        D_n &= D - \{(x_n, y_n)\}\\
+        e_n &= E_{val}(h_{D_n}) = e(h_{D_n}, (x_n), y_n)\\
+        E_{cv} &= \frac{1}{N} \sum_{i=1}^{N} e_n
+    \end{align*}
+    This is hard to analyze, since errors are correlated but it has been used 
+    successfully in practice. However, doing this cross-validation is slow, as 
+    we have to train $N$ times on $N-1$ points. Therefore we use $K$-Fold Cross 
+    Validation:
+    \begin{itemize}
+        \item Split data in $K$ parts of size $\frac{N}{K}$
+        \item Run $K$ rounds of validation with different data-sets of size 
+        $N-K$ and take the mean error.
+    \end{itemize}
+    Usually, we will run for $K=10$ or $K=5$, as we are impatient beings with 
+    deadlines.
 \end{document}

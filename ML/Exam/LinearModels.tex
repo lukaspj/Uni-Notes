@@ -54,6 +54,23 @@
    The key point here is, \textbf{they are linear in $w$ not necessarily in 
    $x$.} I.e. linear in the feature-space but not necessarily in the data space.
 
+    \subsubsection{Learning algorithm}
+    Our error measure for linear regression is:
+    \begin{equation*}
+        err(h(x),y)=(h(x)-y)^2
+    \end{equation*}
+    So our learning algorithm is to find the $w$ that minimizes this:
+    \begin{equation*}
+        \arg\min\limits_w E_{in}(w)=\frac{1}{n}\sum_{(x,y)\in D}(w^Tx - y)^2
+    \end{equation*}
+
+    We can simply find $w$ by solving:
+    \begin{equation*}
+        w=(X^TX)^-1X^Ty
+    \end{equation*}
+    In \bigO{nd^2} time. However, linear regression is sensitive to data. Which 
+    is why the Perceptron algorithm is interesting.
+
     \subsection{Perceptron}
     \url{https://www.youtube.com/watch?v=5g0TPrxKK6o}
     Perceptron training, find weights that map inputs to outputs. To primary 
