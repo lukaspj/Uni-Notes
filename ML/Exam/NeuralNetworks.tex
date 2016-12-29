@@ -359,4 +359,260 @@
         W_{ij}^{(l)}}J(W,b)\\
         b_i^{(l)}&=-\eta \frac{\partial}{\partial b_i^{(l)}}J(W,b)
     \end{align*}
+    
+    Seems simple right? But how do we do this efficiently? The backpropagation 
+    algorithm is the key. The intuition is that given some training example 
+    $(x,y)$, we want to do a ``forward pass'' which computes all the 
+    activations throughout the network, including the output value. Then for 
+    each node $i$ in layer $l$, we compute an ``error term'' $\delta_i^{(l)}$ 
+    which measures how much that node was ``responsible'' for any errors in the 
+    output.
+    
+    For $\delta_i^{(nl)}$ we can simply compute the difference between the 
+    activation and the true target label $y$. For hidden units, we don't have 
+    the ``correct answer'' so instead we compute $\delta_i^{(l)}$ based on 
+    weighted average of the error terms of the nodes that uses $a_i^{(l)}$ as 
+    input. So in detail:
+    
+    \begin{enumerate}
+        \item Perform a feedforward pass, computing the activations for layers 
+        $L_2,L_3,\dots,L_{n_l}$
+        \item For each output unit $i$ in layer $n_l$, set
+        \begin{align*}
+            \delta_i^{(n_l)} &= \frac{\partial}{\partial z_i^{(n_l)}} 
+            \frac{1}{2}\|y-h_{W,b}(x)\|^2 = \frac{\partial}{\partial 
+            z_i^{(n_l)}} \frac{1}{2}
+            \left(\sqrt{(y_1-z_1^{(n_l)})^2+\dots+
+                (y_i-z_i^{(n_l)})^2+\dots+
+                (y_{s_l}-z_{s_l}^{(n_l)})^2}\right)^2\\
+            \delta_i^{(n_l)} &= -(y_i - a_i^{(n_l)}) \cdot 
+            \phi'(z_i^{(n_l)})\\
+        \end{align*}
+        \item For $l=n_l-1, n_l-2,\dots, 2$
+            For each node $i$ in $L_l$ set
+            \begin{equation*}
+                \delta_i^{(l)}=\left(\sum_{j=1}^{s_{l+1}}W_{ji}^{(l)}\delta_j^{(l+1)}\phi'(z_i^{(l)})\right)
+            \end{equation*}
+        \item We can now compute the desired partial derivatives, as:
+        \begin{align*}
+            \frac{\partial}{\partial W_{ij}^{(l)}}J(W,b;x,y) &= 
+            a_j^{(l)}\delta_i^{(l)}\\
+            \frac{\partial}{\partial b_i^{(l)}}J(W,b;x,y) &= \delta_i^{(l+1)}
+        \end{align*}
+    \end{enumerate}
+    We can then compute the derivatives with respect to the whole data-set, for 
+    the overall cost function, as:
+    \begin{align*}
+        \frac{\partial}{\partial W_{ij}^{(l)}} J(W,b) &= 
+        \left[\frac{1}{|D|}\sum_{i=1}^{|D|}\frac{\partial}{\partial 
+        W_{ij}^{(l)}} J(W,b;x_i,y_i)\right] + \lambda W_{ij}^{(l)}\\
+        \frac{\partial}{\partial b_i^{(l)}} J(W,b) &= 
+        \frac{1}{|D|}\sum_{i=1}^{|D|} \frac{\partial}{\partial b_i^{(l)}} 
+        J(W,b;x_i, y_i)
+    \end{align*}
+    
+    Numerical differentiation takes one evaluation of the neural net per weight 
+    (\bigO{(\#weights)^2}), now with back propagation, we simply use each edge 
+    in each pass \bigO{\#weights}.
+    
+    \subsection{Deep Nets}
+    Deep nets are when we have many layers of neurons. Each layer transforms 
+    the input into a ``better'' representation, and we will just repeat this 
+    procedure, and keep getting ``better'' representations. Historically, this 
+    has seemed to failed, this could either be because of a bad hypothesis or 
+    an issue with the learning algorithm.
+    
+    One of the approaches to fixing this is better architecture, for example 
+    the convolutional network. Others are much more data, or computing power or 
+    do find better weights before we do backpropagation or maybe the field just 
+    needs to mature.
+    
+    \subsubsection{Convolutional networks}
+    These are useful for, for example image recognition. The building blocks of 
+    a convolutional network are as follow:
+    \begin{enumerate}
+        \item Convolution
+        \item Non Linearity
+        \item Pooling
+        \item Classification (fully connected layer)
+    \end{enumerate}
+    
+    \subsubsection{Convolution}
+    First of all, convolution is like sliding a window over the image and 
+    applying some filter to it. For example we could have a simple ``filter'', 
+    ``kernel'' or ``feature detector'' which is simply a $m\times n$ matrix 
+    which slides over the image. For example the matrix:
+    \begin{equation*}
+        \begin{pmatrix}
+        1 & 0\\
+        0 & 1
+        \end{pmatrix}
+    \end{equation*}
+    might slide over the input:
+    \begin{equation*}
+        \begin{pmatrix}
+        1 & 0 & 1\\
+        0 & 2 & 0\\
+        1 & 0 & 3
+        \end{pmatrix}
+    \end{equation*}
+    Since the feature detector is $2\times 2$, it will look at first top-left 4 
+    numbers, then it will slide $1$ pixel right and look at the top-right 
+    numbers, then the bottom-left and then the bottom right. Producing the 
+    following ``feature map'':
+    \begin{equation*}
+        \begin{pmatrix}
+        1*1 + 0*0 + 0*0 + 1*2 & 1*0 + 0*1 + 0*2 + 1*0\\
+        1*0 + 0*2 + 0*1 + 1*0 & 1*2 + 0*1 + 0*1 + 1*3 
+        \end{pmatrix} = \begin{pmatrix}
+        3 & 0\\
+        0 & 5
+        \end{pmatrix}
+    \end{equation*}
+    The size of the ``feature map'' is controlled by three parameers:
+    \begin{itemize}
+        \item Depth corresponding to the number of filters
+        \item Stride is the number of pixels or indices we move the feature 
+        detector with. In the above example it was 1
+        \item Zero-padding, we might zero-pad in order to be able to slide the 
+        window around the  edges of the matrix as well. Zero-padded convolution 
+        is also called \textit{wide convolution} while non-zero-padded is 
+        called \textit{narrow convolution}
+    \end{itemize}
+    
+    \subsubsection{Non-linearity}
+    The non-linearity operation aims to introduce some non-linearity into the 
+    data, as it real world data is often non-linear. An example of such an 
+    operation is the ReLU opeartion, which simply sets any negative elements to 
+    $0$. The result is the Rectified Feature Map
+    
+    \subsubsection{Pooling}
+    Pooling reduces the dimensionality of each feature map but retains the most 
+    important information. Pooling can be done in a number of different way 
+    like Max, Average, Sum etc. It runs a window over the rectified feature 
+    map, and runs some function on the entries in the window. It might, for 
+    example, output the maximum value in the window, resulting in a smaller 
+    feature map.
+    
+    \subsubsection{Fully connected layer}
+    The result of one or more convolution and poolings, can then be put through 
+    the fully connected layer which will try to use the information to perform 
+    e.g. classification, as usual.
+    
+    \subsection{PCA}
+    PCA tries to take some data in dimension $d$ in to some dimension $k$. A 
+    neural net autoencoder can come up with something very similar to this.
+    
+    \subsection{Autoencoder}
+    
+    This is an auto-encoder:
+    \begin{tikzpicture}[node distance = 0.2cm and 1.5cm]
+    \node[inputnode] (x1) {$x_1$};
+    \node[inputnode, below=of x1] (x2) {$x_2$};
+    \node[inputnode, below=of x2] (x3) {$x_3$};
+    \node[inputnode, below=of x3] (x4) {$x_4$};
+    \node[inputnode, below=of x4] (x5) {$x_5$};
+    \node[inputnode, below=of x5] (x6) {$x_6$};
+    \node[inputnode, below=of x6] (b1) {$+1$};
+    
+    \node[hiddennode, right=of x1, between=x2 and x3] (h1) {};
+    \node[hiddennode, below=of h1] (h2) {};
+    \node[hiddennode, below=of h2] (h3) {};
+    \node[hiddennode, below=of h3] (b2) {$+1$};
+    
+    \node[right=of x1] (xx1) {};
+    
+    \node[outputnode, right=of xx1] (o1) {$\hat{x_1}$};
+    \node[right=of o1] (oo1) {};
+    
+    \node[outputnode, below=of o1] (o2) {$\hat{x_2}$};
+    \node[right=of o2] (oo2) {};
+    
+    \node[outputnode, below=of o2] (o3) {$\hat{x_3}$};
+    \node[right=of o3] (oo3) {};
+    
+    \node[outputnode, below=of o3] (o4) {$\hat{x_4}$};
+    \node[right=of o4] (oo4) {};
+    
+    \node[outputnode, below=of o4] (o5) {$\hat{x_5}$};
+    \node[right=of o5] (oo5) {};
+    
+    \node[outputnode, below=of o5] (o6) {$\hat{x_6}$};
+    \node[right=of o6] (oo6) {};
+    
+    \node[textbox, right=of oo1, between=o3 and o4] (t) {$h_{W,b}(x)$};
+    
+    \path[edgepath]
+    (x1) edge node {} (h1)
+    (x1) edge node {} (h2)
+    (x1) edge node {} (h3)
+    (x2) edge node {} (h1)
+    (x2) edge node {} (h2)
+    (x2) edge node {} (h3)
+    (x3) edge node {} (h1)
+    (x3) edge node {} (h2)
+    (x3) edge node {} (h3)
+    (x4) edge node {} (h1)
+    (x4) edge node {} (h2)
+    (x4) edge node {} (h3)
+    (x5) edge node {} (h1)
+    (x5) edge node {} (h2)
+    (x5) edge node {} (h3)
+    (x6) edge node {} (h1)
+    (x6) edge node {} (h2)
+    (x6) edge node {} (h3)
+    (b1) edge node {} (h1)
+    (b1) edge node {} (h2)
+    (b1) edge node {} (h3)
+    (h1) edge node {} (o1)
+    (h2) edge node {} (o1)
+    (h3) edge node {} (o1)
+    (h1) edge node {} (o2)
+    (h2) edge node {} (o2)
+    (h3) edge node {} (o2)
+    (h1) edge node {} (o3)
+    (h2) edge node {} (o3)
+    (h3) edge node {} (o3)
+    (h1) edge node {} (o4)
+    (h2) edge node {} (o4)
+    (h3) edge node {} (o4)
+    (h1) edge node {} (o5)
+    (h2) edge node {} (o5)
+    (h3) edge node {} (o5)
+    (h1) edge node {} (o6)
+    (h2) edge node {} (o6)
+    (h3) edge node {} (o6)
+    (b2) edge node {} (o1)
+    (b2) edge node {} (o2)
+    (b2) edge node {} (o3)
+    (b2) edge node {} (o4)
+    (b2) edge node {} (o5)
+    (b2) edge node {} (o6)
+    (o1) edge node {} (oo1)
+    (o2) edge node {} (oo2)
+    (o3) edge node {} (oo3)
+    (o4) edge node {} (oo4)
+    (o5) edge node {} (oo5)
+    (o6) edge node {} (oo6);
+    \end{tikzpicture}
+    The autoencoder tries to learn a function $h_{W,b}\approx x$, i.e. it takes 
+    the input and tries to re-create it. This can be useful, as it effectively 
+    tries to learn what features in the data is important if I have to know the 
+    difference between two inputs but I can only do it in e.g. half the space. 
+    So if there some of the input features are correlated, then this algorithm 
+    will be able to discover some of those correlations. In fact it often ends 
+    up learning a low-dimensional representation very similar to PCA's.
+    
+    \subsection{Regularization}
+    We introduced weight decay regularization already, another good way to 
+    regularize neural networks is the simple ``dropout'' technique, which 
+    simply means that we ignore the output of some random neurons. This forces 
+    the hidden neurons to be robust and approcimates averaging of exponentially 
+    many models.
+    
+    \subsection{Finding a good local minimum}
+    Our neural network is riddled with local minimum, so in order to find a 
+    good local minimum, we will simply start the gradient descent from many 
+    different starting points, so we end up in different local minimums and 
+    choose the best one, hoping that it is a global minimum.
 \end{document}
