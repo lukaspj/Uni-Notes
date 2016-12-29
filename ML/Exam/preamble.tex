@@ -5,6 +5,7 @@
 \usepackage{pgfplots}
 \usepackage{float}
 \usepackage{todonotes}
+\usepackage{tikz}
 
 \renewcommand{\Re}{\mathbb{R}}
 \newcommand{\Li}{\mathcal{L}}
@@ -25,3 +26,28 @@
     \end{tikzpicture}
     
     }
+
+\usetikzlibrary{positioning, calc}
+\usetikzlibrary{arrows.meta}
+
+\tikzstyle{circlebox}=[circle,thick,draw=black!75,minimum size=8mm]
+\tikzstyle{inputnode}=[circlebox, draw=blue!75]
+\tikzstyle{hiddennode}=[circlebox, draw=orange!75]
+\tikzstyle{outputnode}=[circlebox, draw=orange!75]
+\tikzstyle{simplebox}=[rectangle,thick,draw=black!75,
+fill=black!20,minimum size=4mm]
+\tikzstyle{textbox}=[rectangle,thick,minimum size=4mm,draw=black!0,
+fill=black!0]
+\tikzstyle{halfvdistance}=[yshift=-0.7cm]
+\tikzstyle{abovebetween}=[xshift=-2.7mm]
+\tikzstyle{edgepath} = [-Latex,->,shorten >=1pt,-stealth,semithick, rounded 
+corners=5pt]
+
+\def \nodedv {0.735cm}
+\def \nodedh {0.65cm}
+
+\tikzset{
+    between/.style args={#1 and #2}{
+        at = ($(#1)!0.5!(#2)$)
+    }
+}
