@@ -187,7 +187,143 @@
     \begin{equation*}
         h_{\text{bag}}(x)=\frac{1}{B}\sum_{i=1}^{B} h_i(x)
     \end{equation*}
+    This should bring down variance while not touching bias. Ideally we would 
+    get:
+    \begin{equation*}
+        Var(Bagging(T))=\frac{Var(T)}{m}
+    \end{equation*}
+    But in practice, the reduction is less since the bagged models are still 
+    fairly correlated. Furthermore, some classifiers are better than others. 
+    Let's look at the following example with a trivial target function $f(x)=1, 
+    \forall x$. If we then bagged ``poor'' classifiers that return $1$ with 
+    probability $0.4$, then if we had many classifiers, the probability would 
+    converge to $0$ as the number of classifiers increases and $E_{out}=1$. If 
+    we instead bagged ``better'' classifiers which return $1$ with probability 
+    $0.6$, then the opposite would happen. This has been popularized as 
+    ``Wisdom of Crowds'', which states that as long as the persons in the crowd 
+    are smarter than just guessing, then if we ask many people we will improve 
+    on our result, by either taking mean or majority vote (depending on 
+    regression or classification).
     
+    In order to improve on this, we can use process called ``boosting'' which 
+    improves the quality on individual learners, such that the learners we put 
+    into our ``crowd'' perform better than just guessing.
     
+    A final note: the main draw-back of bagging is that it mostly works on 
+    unstable models, which are also often the models that are easy to 
+    interpret. Bagging, however, ruins the simplicity of the model and makes it 
+    harder to interpret the model as the model will no longer be e.g. a tree, 
+    but in fact it is a more complex structure.
     
+    \todo[inline]{Random forests?}
+    
+    \subsubsection{Boosting}
+    Boosting works in similar way to bagging, but the similarity is mostly 
+    superfluous. In boosting we, similar to bagging, produce $M$ modified 
+    versions of the data-set, producing a sequence of weak classifiers 
+    $h_1,h_2,\dots,h_M$ (classifiers whose error rate is only slightly better 
+    than random guessing) and then we find a weighted majority-vote, to produce 
+    the final prediction:
+    \begin{equation*}
+        h_{boost}(x)=\sign \left(\sum_{m=1}^{M}\alpha_m h_m(x)\right)
+    \end{equation*}
+    Here, $\alpha_1,\alpha_2,\dots,\alpha_M$ are computed by the boosting 
+    algorithm. The $\alpha$'s are supposed to give the more accurate 
+    classifiers in the sequence more influence.
+    
+    Now let's look at an example of a boosting algorithm, AdaBoost. The ides is 
+    that at each boosting step, we produce the data-set $D_i$ by applying some 
+    weights to each of the training points $(x,y)$. Initially all weights $w_i$ 
+    are set to: $w_i=\frac{1}{N}$ so that the first step simply trains in the 
+    usual manner. Then for the data-set $D_i$ at step $i$ we have modified the 
+    weights such that those observations that were misclassified by 
+    $h_{i-1}(x)$ have their weights increased, and those that were classified 
+    correctly have their weights decreased, such that the observations that are 
+    difficult to classify, receive more and more influence. The algorithm for 
+    AdaBoost (or rather AdaBoost.M1) is as follows:
+    \begin{enumerate}
+        \item Initialize the observation weights 
+        \begin{equation*}
+            w_i=\frac{1}{N}, \quad i=1,2,\dots,N
+        \end{equation*}
+        \item For $m=1$ to $M$:
+        \begin{enumerate}[a)]
+            \item Fit a classifier $h_m(x)$ to the training data using weights 
+            $w_i$.
+            \item Compute:
+            \begin{equation*}
+                err_m=\frac{\sum_{i=1}^{N}w_i \cdot 1_{[y_i \neq 
+                h_m(x_i)]}}{\sum_{i=1}^{N}w_i}
+            \end{equation*}
+            \item Compute:
+            \begin{equation*}
+                \alpha_m=\log\left(\frac{1-err_m}{err_m}\right)
+            \end{equation*}
+            \item Set:
+            \begin{equation*}
+                w_i \leftarrow w_i \cdot \exp\left[\alpha_m \cdot 1_{[y_i \neq 
+                h_m(x_i)]}\right], \quad i=1,2,\dots,N
+            \end{equation*}
+        \end{enumerate}
+        \item Output:
+        \begin{equation*}
+            h_{boost}(x)=\sign \left[\sum_{m=1}^{M}\alpha_m h_m(x)\right]
+        \end{equation*}
+    \end{enumerate}
+    Note that this is the ``discrete'' version of AdaBoost, there are versions 
+    of AdaBoost that work on regression problems as well.
+    
+    Since AdaBoost only needs weak classifiers, then just a shallow tree of 
+    depth $2$ for example, can produce impressive results after a lot of 
+    iterations. Even classifiers as weak as $45\%$ quickly improves their 
+    accuracy.
+    
+    \subsubsection{Additive models}
+    An additive model is described as:
+    \begin{equation*}
+        h(x) = \sum_{m=1}^{M} \alpha_m h_m(x;\theta_m)
+    \end{equation*}
+    Where $\alpha_m$ is the vote importance, $h_m$ is the base learner and 
+    $\theta_m$ is the parameters that define the specific version of the base 
+    learner.
+    These models are typically fit by minimizing a loss function averaged over 
+    the training data (e.g. squared-error or cross-entropy):
+    \begin{equation*}
+        \arg\min_{\alpha_j,\theta_j,j=1,\dots,M} \sum_{x,y \in D} 
+        \error\left(y, \sum_{m=1}^{M}\alpha_m h(x, \theta_m)\right)
+    \end{equation*}
+    
+    We can then formulate the forward stagewise additive modelling algorithm:
+    \begin{enumerate}
+        \item $h_0(x) = 0$
+        \item For $m=1,\dots,M$
+        \begin{enumerate}[a)]
+            \item Compute:
+            \begin{equation*}
+                (\beta_m,\bar{h}_m)=\arg\min_{\beta,h}\sum_{i=1}^{N}\error\left(y_i,
+                 h_{m-1}(x_i)+\beta h(x_i)\right)
+            \end{equation*}
+            \item Compute:
+            \begin{equation*}
+                h_m(x)=h_{m-1}(x)+\beta_m \bar{h}(x)
+            \end{equation*}
+        \end{enumerate}
+        \item Output $h_M$
+    \end{enumerate}
+    For example, given the squared error: $\error(y, h(x))=(y-h(x))^2$, then we 
+    have that, at each step $m$ we minimize:
+    \begin{equation*}
+        \error(y_i, h_{m-1}(x_i)+\beta_m h_m(x_i))=(y_i-h_{m-1}(x_i)-\beta_m 
+        h_m(x_i))^2
+    \end{equation*}
+    Since $y_i-h_{m-1}(x_i)$ is simply the error of the current model, then we 
+    see that we are repeatedly trying to fit the errors of the current model.
+    
+    If we instead use the cost function:
+    \begin{equation*}
+        \error(y,h(x))=\exp(-y\cdot h(x))
+    \end{equation*}
+    Which is small if $y$ and $h(x)$ has the same sign, otherwise large. Then 
+    it turns out that this is exactly what AdaBoost.M1 is minimizing, thus 
+    AdaBoost.M1 is a a forward-stagewise additive modeling approach.
 \end{document}
