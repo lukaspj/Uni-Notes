@@ -295,7 +295,75 @@
         the partitioning clustering of the whole data-set.
     \end{itemize}
     
-    \subsubsection{Measuring the quality of a clustering}
+    \subsection{Density based clustering}
+    Remember how $k$-means worked by seperating into a voronoid diagram?\\
+    \voronoi{3}{3}\\
+    In general representation-based clustering only work for convex clusters, 
+    Density-based clustering attempts to cluster more complex shapes, like a 
+    S-shaped cluster. The basic concept is as follows:
+    
+    \begin{itemize}
+        \item For any point in a cluster, the local point density around that 
+        point has to exceed some threshold
+        \item The set of points from one cluster is spatially connected
+    \end{itemize}
+    Local point density at a point $p$ is defined by two parameters:
+    \begin{itemize}
+        \item $\epsilon$ - radius for the neighbourhood of point $q$:
+        \begin{equation*}
+            N_\epsilon(q) = \{p \text{ in data-set } D| \dist(p,q)\leq\epsilon\}
+        \end{equation*}
+        \item MinPts - minimum number of points in the given neighbourhood 
+        $N(p)$
+    \end{itemize}
+    We call an object $q$ a core object (or core point) w.r.t. $\epsilon$ if 
+    $|N_\epsilon(q)| \geq MinPts$ i.e. if there are at least $MinPts$ objects 
+    within a radius of $\epsilon$ of $q$.
+    
+    We now define the following terms:
+    \begin{itemize}
+        \item $p$ is \textbf{\textit{directly density-reachable}} from $q$ 
+        w.r.t. $\epsilon$ and $MinPts$ if:
+        \begin{enumerate}
+            \item $p \in N_\epsilon(q)$
+            \item $q$ is a core object w.r.t. $\epsilon$ and $MinPts$
+        \end{enumerate}
+        \item \textbf{\textit{density-reachable}} is a transitive closure of 
+        \textit{directly} density-reachable
+        \item $p$ is \textbf{\textit{density-connected}} to a point $q$ w.r.t. 
+        $\epsilon$ and $MinPts$, if there is a point $o$ such that both $p$ and 
+        $q$ are density-reachable from $o$ w.r.t. $\epsilon$ and $MinPts$.
+        \item A \textbf{\textit{density-based cluster}} is a non-empty subset 
+        of $S$ of dataset $D$ satisfying:
+        \begin{enumerate}
+            \item Maximality: if $p$ is in $S$ and $q$ is density-reachable 
+            from $p$ then $q$ is in $S$
+            \item Connectivity: each object in $S$ is density-connected to all 
+            other objects
+        \end{enumerate}
+        \item A \textbf{\textit{density-based clustering}} of a dataset is 
+        $D:\{S_1,\dots,S_n;N\}$ where:
+        \begin{itemize}
+            \item $S_1,\dots, S_n$ is all density-based clusters in the 
+            data-set $D$
+            \item $N=D \setminus \{S_1,\dots,S_n\}$ is called the 
+            \textbf{\textit{noise}} (the objects that are not in any cluster)
+        \end{itemize}
+    \end{itemize}
+    One clarification, imagine two non-core points $p$ and $q$ with a core 
+    point $c$ between them. Since neither $p$ nor $q$ are core points, they 
+    cannot be density-reachable, but they can be density-connected because of 
+    $c$.
+    
+    \subsubsection{DBSCAN}
+    
+    \subsubsection{DENCLUE}
+    
+    %TODO \subsection{Hierarchical clustering}
+    
+    \subsection{Subspace clustering}
+    
+    \subsection{Measuring the quality of a clustering}
     For choosing $k$, one idea could be to determine the clustering for 
     $k=2,3,\dots,n-1$ and then choose the ``best'' clustering. But how do we 
     actually measure the quality of a clustering? If we need to use it to 
