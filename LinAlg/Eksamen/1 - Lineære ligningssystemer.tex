@@ -1,0 +1,206 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, æ og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[latin1]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebræker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Lineære ligningssystemer}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    	\item Lineært ligningssystem
+    	\item ERO'er
+    	\item Rækkeækvivalens
+    	\item REF/RREF
+    	\item Mindste kvadraters løsning
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Lineært ligningssystem}
+	Et lineært ligningssystem er et system af $m$ ligninger med 
+	$n$ ubekendte, hvor disse kan skrives som:
+	\begin{align*}
+	a_{11}x_1+a_{12}x_2+\dots + a_{1n}x_n=b_1\\
+	a_{21}x_1+a_{22}x_2+\dots + a_{2n}x_n=b_2\\
+	\dots\\
+	a_{m1}x_1+a_{m2}x_2+\dots + a_{mn}x_n=b_m
+	\end{align*}
+	Kan også skrives på matrix form som:
+	
+	\begin{equation}
+	Ax=b
+	\end{equation}
+	Løsningsmængden er $\forall x$ hvor systemet er konsistent. 
+	Hvis der ingen løsninger er, er løsningsmængden tom, hvilket 
+	betyder at systemet er inkonsistent. Hvis løsningsmængden 
+	indeholder en eller flere løsninger, er den konsistent.
+	\\
+	\\
+	\textbf{Homogent:}	$b=0$\\
+	\textbf{Triviel løsning:} $x=0$
+	
+	\section{ERO'er}
+	Elementære rækkeoperationer, består af 3 forskellige operationer:
+	
+	\begin{description}
+		\item[Ombytning] At bytte om på to rækker.
+		\item[Skalering] Gange en række med en skalar ($a\neq 0$).
+		\item[Addition] Lægge en række til en anden række.
+	\end{description}
+	
+	Elementære rækkeoperationer ændrer ikke løsningsmængden.	
+	
+	\section{Rækkeækvivalens}
+	Rækkeækvivalens gælder når to ligningssystemer har samme løsningsmængde for samme sæt af variabler.
+	\begin{equation}
+	(A|b) \sim (H|c)
+	\end{equation}
+	hvis der eksisterer en løsning $x$ til ligningssystemet $A$ vil $x$ også være en løsning til $H$.
+	
+	\section{REF/RREF}
+	En matrix er på REF når:
+	\begin{enumerate}
+	\item første ikke-nul element i hver række er 1.
+	\item Hver række har flere foranstillede nuller end den foregående.
+	\item Alle rækker der udelukkende indeholder nuller (nul-rækker) er nederst.
+	\end{enumerate}
+	Pivoter er elementerne beskrevet i regel $1$.
+	
+	En matrix er på RREF når:
+	\begin{enumerate}
+	\item Matricen er på REF
+	\item Hver pivot er eneste ikke-nul element i sæjlen.
+	\end{enumerate}
+	
+	\section{Theorem 1.2.1}
+	Et $m\times n$ homogent system af lineære ligninger har en 
+	ikke-triviel løsning hvis $n>m$.
+	\\
+	\\
+	Et homogent system er altid konsistent da $x=0$ er en løsning.\\
+	REF af matrixen har højst $m$ ikke-nul rækker. Derfor højst $m$
+	pivoter.\\
+	Siden der er $n$ søjler, og derved $n$ variabler og $n>m$, så
+	må der være en, eller flere, søjler mere end rækker og derfor
+	vil der være $n-m>0$ frie variable.\\
+	Hver af de frie variable kan have en arbitrær værdi, og for 
+	enhver værdi af de frie variable er der en løsning til systemet.\\
+	
+	\section{Mindste kvadraters løsning}    
+	Lave et best fit af et sæt af data der muligvis ikke kan
+	findes en løsning til pga. små unøjagtigheder eller 
+	afvigelser.
+	
+	Givet et $m \times n$ lineært ligningssystem $Ax=b, m>n$ 
+	(Overdetermineret), så kan man ikke generelt forvente at
+	der er et $x \in \mathbb{R}^n$ hvor $Ax=b$. Derfor hvis
+	$b \in \mathbb{R}^m$, så for ethvert $x \in \mathbb{R}^n$
+	kan vi forme et residual:
+	$$r(x)=b-Ax$$
+	Distancen mellem $b$ og $Ax$ er givet ved:
+	$$\|b-Ax\|=\|r(x)\|$$
+	Vi ønsker da at finde en mindste kvadraters løsning $\hat{x}$
+	hvor $\|r(x)\|$ er mindst mulig. Hvis $\hat{x}$ er en 
+	mindste kvadraters løsning og $p=A\hat{x}$ så er $p$ den
+	vektor i søjlerummet for $A$ der er tættest på $b$.
+	\\
+	\\
+	Projektionen $p$ af $b$ på $S$ er det nærmeste punkt
+	til $b$ i $S$. Altså:
+	$$\|b-y\|>\|b-p\|\forall y \neq p \in S$$
+	Dog kun hvis $b-p\in S^\perp$
+	
+	\section{Theorem 5.3.1}
+	Lad $S\subset \mathbb{R}^m$ og $x\in \mathbb{R}^m$. Da 
+	er projektionen $p=P_S(x)$ af $x$ på $S$ det nærmeste 
+	punkt til $x$ i $S$. Altså:
+	$$\|x-y\|>\|x-p\|, \forall y \in S \backslash \{p\}$$
+	\\
+	\\
+	Vi ved at $\mathbb{R}^m = S \bigoplus S^\perp$ (den direkte sum)
+	derfor kan enhver $x \in \mathbb{R}^m$ skrives unikt som
+	summen:
+	$$x=p+z$$
+	hvor $p\in S$ og $z \in S^\perp$. $\forall y \in 
+	S\backslash \{p\}$
+	gælder der:
+	$$\|x-y\|^2=\|x-p+p-y\|^2$$
+	Siden $p-y\in S$ og $x-p \in S^\perp$, så følger det
+	af Pythagoras' lov der siger at:
+	$$\text{Hvis }u,v\in\mathbb{R}^n\text{ er ortogonale 
+	så er } \|u+v\|^2=\|u\|^2+\|v\|^2$$
+	$$\|x-y\|^2=\|x-p\|^2+\|p-y\|^2$$
+	Da $p\neq y$ så er $\|p-y\|^2>0$ så derved bliver 
+	$$\|x-y\|^2>\|x-p\|^2$$
+    
+\end{document}

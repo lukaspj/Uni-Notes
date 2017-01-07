@@ -1,0 +1,155 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Ortogonalt komplement og projektion}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+    
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    \item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Ortogonalt komplement}
+	Det ortogonale komplement $W^\perp$ til underrummet $W$ af
+	$\mathbb{R}^n$ er mængden af alle de vektorer der er ortogonale
+	på alle vektorer i $W$.
+	$$W^\perp = \{v\in \mathbb{R}^n |v^Tu=0 \forall u \in W \}$$
+	Dette medfører: 
+	\begin{enumerate}
+	\item $W^\perp$ er et underrum af $\mathbb{R}^n$.
+	\item $dim(W^\perp)=n-dim(W)$.
+	\item $(W^\perp)^\perp$ - hvilket betyder det ortogonale komplement
+	af $W^\perp$ er $W$.
+	\item Enhver vektor $b$ i $\mathbb{R}^n$ kan blive udtrykt $b=b_w+b_{w^\perp}$
+	for $b_w\in W$ og $b_{w^\perp} \in W$ 
+	\end{enumerate}
+	
+	\section{Theorem 5.2.4}
+	Hvis $S$ er et underrum af $\mathbb{R}^n$, så er $(S^\perp)^\perp=S$.
+	\\
+	\\
+	Hvis $x \in S$ så er $x$ ortogonal til enhver $y$ i $S^\perp$.
+	Derved er $S\subseteq (S^\perp)^\perp$.\\
+	\\
+	Omvendt, hvis $z\in (S^\perp)^\perp$ kan $z$ skrives som
+	$z=u+v,\quad u\in S, v\in S^\perp$ fordi at 
+	$\mathbb{R}^n=S\bigoplus S^\perp$. Da $v\in S^\perp$ er 
+	ortogonal til både $u$ og $z$. Så følger det at:\\
+	($x^Ty=\inner{x}{y}$ for $\mathbb{R}$)
+	$$0=v^Tz=v^Tu+v^Tv=v^Tv$$
+	Derved må $v=0$. Vi får så at $z=u\in S$ derved 
+	er $S=(S^\perp)^\perp$
+	
+	\section{Korollar 5.5.9}
+	$\{u_1,\dots,u_m\}$ er en ortonormal basis for 
+	$S\in \mathbb{R}^m$ og $b \in \mathbb{R}^m$. $U=(u_1,\dots,u_m)$
+	\\
+	\\
+	Theorem 5.5.8 siger at projektionen $p$ af $b$ på $S$ er:
+	$$p=c_1u_1+\cdots+c_mu_m=Uc$$
+	Hvor
+	$$c=\begin{bmatrix}
+	c_1 \\
+	\vdots \\
+	c_m
+	\end{bmatrix}=\begin{bmatrix}
+	u^T_1\\
+	\vdots \\
+	u^T_m
+	\end{bmatrix}=U^Tb$$
+	Derved får vi: 
+	$$p=UU^Tb$$
+	
+	\section{Projektionsmatrix}
+	Hvis $\{u_1,u_2,\dots,u_k\}$ er en ortonormal basis for $S\in \mathbb{R}^m\\0$
+	og $U=(u_1,u_2,\dots,u_k)$ så er projektionen $p$ af $b \in \mathbb{R}^m$
+	på $S$ givet ved:
+	$$p=UU^T b$$
+	Matricen $UU^T$ er en projektionsmatrix til underrummet $S$,
+	denne projektionsmatrix er unik.
+	
+	\section{Bevis for unikhed}
+	Hvis $P$ er en projektionsmatrix tilhørende et 
+	underrum $S$ af $R^m$, så er projektionen $p$
+	af $b$ på $S$ unik.\\
+	Hvis $Q$ også er en projektionsmatrix tilhørende $S$
+	så er:
+	$$Qb=p=Pb$$
+	Det følger heraf at:
+	$$q_j=Qc_j=Pc_jp_j$$
+\end{document}

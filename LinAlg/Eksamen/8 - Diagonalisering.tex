@@ -1,0 +1,179 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Diagonalisering}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+    
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    \item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Egenværdi og egenvektor}
+	$$A\in Mat_{m,n}(\mathbb{F}), \lambda \in \mathbb{F}$$
+	
+	$\lambda$ er en egenværdi (eller karakteristisk værdi) for matricen 
+	$A$ hvis den opfylder:
+	$$Ax=\lambda x$$
+	Hvor $x$ egenvektoren ikke er nulvektoren $0$ og kaldes egenvektoren 
+	tilhørende egenværdien $\lambda$.
+	
+	En egenværdi har adskillige tilknyttede egenvektorer (man kan f.eks. 
+	blot gange en skalar på), men en egenvektor har altid kun én egenværdi. 
+	
+	Komplekse egenværdier har den egenskab at hvis $\lambda = a+bi$ er en
+	egenværdi for $A$, vil den konjungerede også være en egenværdi for $A$.
+	
+	\section{Similaritet}
+	$A,B\in \mathbb{F}^{n,n}$ $B$ er similær til $A$ hvis der eksisterer
+	en ikke-singulær matrix $S$ således at $B=S^-1AS$.
+	
+	Similaritet betyder medfører at matricerne har samme rank, determinant,
+	karakteristisk polynomium, geometrisk multiplicitet.
+	
+	\section{Theorem 6.1.1}
+	Lad $A$ og $B$ være $n \times n$ matricer. Hvis $A$ og $B$
+	er similære, så har de to matricer samme karakteristiske
+	polynomium og derved også samme egenværdier.
+	\\
+	\\
+	Lad $p_A(x),\, p_B(x)$ være de karakteristiske 
+	polynomier for $A$ og $B$. Hvis $B$ er similær til $A$
+	så eksisterer der en invertibel matrix $S$ sådan
+	at $B=S^{-1}AS$. Derved gælder der:
+	\begin{align*}
+	p_B(x)&=det(B-\lambda I)\\
+	&=det(S^{-1}AS-\lambda I)\\
+	&=det(S^{-1})(A-\lambda I)det(S)\\
+	&=p_A(x)
+	\end{align*}
+	Egenværdierne af en matrix er rødderne af det karakteristiske
+	polynomium, da de har samme polynomium har de samme egenværdier.
+	Egenværdierne 
+	
+	\section{Diagonalmatrix}
+	En diagonalmatrix er en matrix $A\in \mathbb{F}^{n,n}$ hvor:
+	$$A = \left\{ \begin{array}{ll}
+	         a_{ij} & \mbox{for i=j},\\
+	        0 & \mbox{ellers}\end{array} \right.$$
+	Diagonalmatricer er lette at arbejde med, da man f.eks. kan udregne 
+	$A^2$ ved blot at tage diagonalindgangene i anden, og $det(A)$ kan
+	findes ved at gange alle elementerne i diagonalen sammen. Det er 
+	dog ikke alle matricer der er diagonaliserbare.
+	
+	\section{Diagonaliserbar}
+	$A\in \mathbb{F}^{n,n}$, $A$ er diagonaliserbar hvis der findes en ikke-
+	singulær matrix $X$ således at:
+	$$X^-1AX=D$$
+	Hvor $D$ er en diagonalmatrix bestående af $A$'s egenværdier og $X$ 
+	diagonaliserer $A$ og har $A$'s egenvektorer som søjlevektorer.
+	
+	\section{Theorem 6.3.2}
+	Først antager vi at $A$ har $n$ lineært uafhængige 
+	egenvektorer $(x_1,\dots,x_n)$ med egenværdier 
+	$(\lambda_1,\dots,\lambda_n)$\\
+	Lad så $X=[x_1,\dots,x_n]$. Det følger så heraf at
+	$Ax_j=\lambda_jx_j$ er den j'te søjlevektor for
+	$AX$, derved får vi:
+	\begin{align*}
+	AX&=(Ax_1,\dots,Ax_n)
+	&=(\lambda_1x_1,\dots,\lambda_nx_n)
+	&=(x_1,\dots,x_n)\begin{bmatrix}
+	\lambda_1 & & 0\\
+ & \ddots & \\
+ 0 & & \lambda_n
+	\end{bmatrix}\\
+	&=XD
+	\end{align*}
+	Siden $X$ har $n$ lineært uafhængige søjlevektorer,
+	så følger det at $X$ er invertibel hvorved der gælder:
+	$$D=X^{-1}XD=X^{-1}AX$$
+	\\
+	\\
+	Nu antager vi at $A$ er diagonaliserbar. Og vil så vise
+	at dette betyder at den har $n$ lineært uafh. egenvek.\\
+	Da $A$ er diagonaliserbar, eksisterer der en invertibel
+	matrix $X$ sådan at $AX=XD$. Hvis $x_1,\dots,x_n$ er 
+	søjlevektorer af $X$, så følger der:
+	$$Ax_j=\lambda_j x_j, \quad (\lambda_j = d_{jj}\, (\text{den jj'te indgang i }D))$$
+	for ethvert $j$. Da er $\lambda_j$ en egenværdi for $A$
+	og søjlerne i $X$, $x_j$, er egenvektorer. Siden søjlevektorerne af $X$
+	er lineært uafhængige, så følger det at $A$ har $n$ lineært
+	uafh. egenvek.
+	
+\end{document}

@@ -1,0 +1,188 @@
+% Dokumentklassen sï¿½ttes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata, positioning}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over Ã¦, Ã¸ og Ã¥ skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[latin1]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kï¿½debrï¿½ker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at lï¿½se manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Lï¿½s manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsï¿½ttelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+ 
+% Reaktionsskemaer. Lï¿½s manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+
+\begin{document}
+    \title{dSik - Threats and Pitfalls}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+    
+    \chapter{Sikkerhedsmål}
+    \section*{CAA}
+    CAA står for:
+    \begin{description}
+    \item[Confidentiality:]Information skal holdes 
+    hemmelig for uvedkommende, gælder både under 
+    forsendelse, opbevaring og behandling af data
+    \item[Authenticity:]Informationen er autentisk, 
+    den er ikke blevet manipuleret af en uautoriseret 
+    person.
+    \item[Availability:]Systemer skal være tilgængelig 
+    når de skal bruges
+    \end{description}
+    
+    \section*{Definition af et sikkert system}
+    Det er typisk svært eller umuligt at bevise et 
+    system er sikkert. Tit bliver man nødt til at
+    lave mange antagelser om angriberens muligheder 
+    for at bevise at et system er sikkert og disse
+    antagelser er typisk forkerte.
+    
+    Vi bruger udtrykket "sikret system" istedet for
+    "sikkert system" da det blot indikerer at vi har
+    sikret systemet mod nogle bestemte tilfælde. Disse
+    tilfælde defineres ved en $Sikkerhedspolitik$ på
+    baggrund af en $Trusselmodel$, og implementerer 
+    herefter denne sikkerhedspolitik vha. nogle 
+    $Sikkerhedsmekanismer$. På den måde får vi, at et 
+    sikret system kan beskrives som:
+    $$Sikret system = Sikkerhedspolitik + Trusselsmodel 
+    + Sikkerhedsmekanismer$$
+    
+    \chapter{Klassificering af angreb}
+    \section*{STRIDE}
+    Kategorisering ud fra en angribers mål.
+    \begin{description}
+    \item[S]poofing Identity: At angriberen får mulighed
+    for at udgive sig for at være en anden.
+    \item[T]ampering: At angriberen får mulighed for at
+    manipulere data uden at dette bliver opdaget.
+    \item[R]epudiation: At angriberen får mulighed for
+    at kunne nægte at have gjort noget høn har gjort.
+    \item[I]nformation Disclosure: At angriberen får 
+    adgang til data han/hun ikke burde se.
+    \item[D]enial of Service: 
+    \item[E]levation of privilege:
+    \end{description}
+    Nogle gange kan angriberen godt have et mål,
+    men alligevel får angrebet andre konsekvenser
+    end målet.
+    
+    \section*{X.800}
+    Meget begrænset og ufyldestgørende opdeling.
+    Opdeling i hvordan angrebet bliver opnået:\\
+    \textbf{Passive angreb:}
+    \begin{description}
+    \item[Eavesdropping:]
+    \item[Traffic Analysis:]
+    \end{description}
+    \textbf{Aktive angreb:}
+    \begin{description}
+    \item[Replay:]
+    \item[Modification:]
+    \end{description}
+    \section*{EINOO}
+    Opdeling i hvorfra og hvem der angriber, EI er
+    "Hvem" og NOO er "Hvorfra"
+    \begin{description}
+    \item[E]xternal attackers:
+    \item[I]nsiders:
+    \end{description}
+    \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+    \begin{description}
+    \item[N]etwork attacks: Lytte og modificere 
+    netværkstraffik.
+    \item[O]ffline attacks: Uautoriseret adgang til
+    der er permanent lagret i systemet.
+    \item[O]nline attacks: Angriberen bryder ing og
+    overvåger systemet mens det kører, som f.eks. at
+    aflæse hemmelig information fra RAM'en
+    \end{description}
+    
+    \section*{TPM}
+    Opdeling ud fra hvilket forsvar der har fejlet:
+    
+    \begin{description}
+    \item[T]hreat Model: Angrebet var muligt fordi
+    vores trusselsmodel var ukomplet.
+    \item[P]olicy: Angrebet var muligt fordi vores 
+    sikkerhedspolitik kommunikerede noget andet end
+    vi ønskede.
+    \item[M]echanism: Angrebet var muligt fordi
+    angriberen kunne bryde uden om vore 
+    sikkerhedsmekanismer.
+    \end{description}
+    
+    \chapter{Buffer overflows}
+    Dårlig programmering kan føre til at man kan
+    overflowe en buffer og derved ændrer i noget det
+    ikke var meningen man skulle ændre i.
+    
+    \chapter{Cross-Site Scripting}
+    Injecte et script på en anden side gennem et
+    bruger input. F.eks. for at stjæle cookie.
+    
+    \chapter{SQL Injections}
+    Injecte noget SQL igennem input felterne som f.eks.
+    brugernavnet.
+    
+    \chapter{Covert Channels}
+    At kommunikere gennem kanaler man ikke burde kunne 
+    kommunikere igennem.
+    
+\end{document}

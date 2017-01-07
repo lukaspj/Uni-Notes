@@ -1,0 +1,119 @@
+% Dokumentklassen sï¿½ttes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata, positioning}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over Ã¦, Ã¸ og Ã¥ skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[latin1]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kï¿½debrï¿½ker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at lï¿½se manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Lï¿½s manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsï¿½ttelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+ 
+% Reaktionsskemaer. Lï¿½s manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+
+\begin{document}
+    \chapter{Authentication}
+    \begin{enumerate}
+    \item Sikkerhedsmål
+    \item Secret/Public-key 
+    \item MAC
+    \item Hashing
+    \item RSA
+    \end{enumerate}
+    
+    \chapter{Confidentiality}
+    \begin{enumerate}
+    \item Sikkerhedsmål
+    \item Secret/Public-key 
+    \item Ciphers
+    \item RSA
+    \end{enumerate}
+    
+    \chapter{Key management}
+    \begin{enumerate}
+    \item Sikkerhedsmål
+    \item Key management
+    \item KDC
+    \item PKI
+    \item Tyveri af nøgler
+    \end{enumerate}
+    
+    \chapter{Network security}
+    \begin{enumerate}
+    \item Sikkerhedsmål
+    \item Netværkssikkerhed
+    \item Firewalls
+    \item IDS
+    \end{enumerate}
+    
+    \chapter{System security}
+    \begin{enumerate}
+    \item Sikkerhedsmål
+    \item Firewalls
+    \item Malware
+    \item Access Control
+    \item Sikkerhedspolitikker
+    \end{enumerate}
+    
+    \chapter{Threats and pitfalls}
+    \begin{enumerate}
+    \item Sikkerhedsmål
+    \item Klassificering af angreb
+    \item Trusler
+    \end{enumerate}
+\end{document}

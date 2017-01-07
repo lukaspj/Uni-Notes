@@ -1,0 +1,135 @@
+\documentclass{article}
+\usepackage{amssymb, amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{alltt}
+\renewcommand{\ttdefault}{txtt}
+
+\title{E4DSA eksamensnoter}
+
+\begin{document}
+\maketitle
+
+\section{Analyse af digitale signaler med DFT og spektrogram}
+DFT i eksponential form:
+\begin{equation}
+X(m)=\sum\limits_{n=0}^{N-1}x(n)e^{-j2\pi nm/N}
+\end{equation}
+I rektangulær form:
+\begin{equation}
+X(m)=\sum\limits_{n=0}^{N-1}x(n)\cdot \left[\cos(2\pi nm/N) - j\cdot \sin(2\pi nm/N)\right]
+\end{equation}
+Eulers relation:
+\begin{equation}
+e^{-j\theta} = \cos(\theta)-i\sin(\theta)
+\end{equation}
+DFT er baseret på at signalet ikke ændrer sig over tid, og det er upraktisk at køre DFT på store signaler.
+
+Derfor spektrogram:
+\begin{equation}
+X(k,n)=\sum\limits_{m=0}^{L-1}w(m)x(n+m)e^{-j(2\pi k/N)m}
+\end{equation}
+Vindue og DFT på forskellige dele af signalet.
+
+\section{Spektral forbredning, zero-pedding og window funktioner i relation til DFT}
+DFT er begrænset til:
+\begin{equation}
+f_{analysis}(m)=\frac{mf_s}{N}, m=0,\dots,N-1
+\end{equation}
+DFT'en er kun præcis hvis alle frekvenserne i signalet passer ind i $\frac{mf_s}{N}$. Hvis der er en sinus med en frekvens der ligger lidt ved siden af, vil der være lækage.
+
+Zero-padding gør at man kan interpolere i DFT-resultatet men det giver ikke bedre frekvensopløsning. N-zeros giver dobbelt så mange bins i DFT'en. Kan bruges til at visualisere vinduers lækage, da $\frac{mf_s}{N*x}$
+
+Vinduer reducerer de sidelobes der kommer af lækage, det rektangulære vindues pludselige skift fra 1 til 0 er grunden til lækagen, et bedre vindue kan reducere lækage.
+
+\section{FIR/IIR filter analyse og design vha. pladsering af poler/nuller}
+Normaliseret frekvens er vinkel af frekvensen:
+\begin{equation}
+\theta = 2\cdot\pi\cdot\frac{f_c}{f_s}
+\end{equation}
+Så kan man finde filter koefficienterne ved:
+$$H(z)=\frac{G\cdot (z-z_0)\cdot(z-z_1)}{(z-p_0)\cdot(z-p_1)}$$
+Lavpas: Begge nuller i $-1$, højpas: begge nuller i $1$, bandreject: nuller på periferien med samme vinkel som polerne, højpas: nuller i 1 og -1.
+
+
+\section{Windowmethod til FIR filter design}
+Design det optimale filter i frekvens-domænet, kør en invers-DFT så får man impulsresponsen for det optimale filter. Dette impulsrespons er dog uendeligt så man skal beslutte sig for en vindues-længde, der bliver én mindre end antallet af koefficienter i filteret.
+
+Herefter skal man påføre et vindue for at forbedre impulsresponsen, da det rektangulære vindue har ripples.
+\\
+\\
+Et all-pass filter er blot det filter hvor center frekvensen ($b_0$) er 1 og resten 0.
+\\
+Et high-pass filter designet ved at trække et low-pass filter fra et all-pass filter.
+\\
+Et band-pass filter kan designes ved at shifte et lav-pas filter (gange med sinus af $f_c$)
+
+\section{Bilinear transformation IIR filter design}
+2nd-order chebychev lowpass filter:
+$$H_c(s)=\frac{c}{s^2+bs+c}$$
+Hvor: $b=137.945$, $c=17410.145$.\\
+Så indsætter man: $\frac{2}{t_s}\cdot\left(\frac{1-z^{-1}}{1+z^{-1}}\right)$ i stedet for s, for at mappe fra s- til z-plan:
+$$H(z)=\frac{c}{\left(\frac{2}{t_s}\cdot\left(\frac{1-z^{-1}}{1+z^{-1}}\right)\right)^2 + b\left(\frac{2}{t_s}\cdot\left(\frac{1-z^{-1}}{1+z^{-1}}\right)\right)^2+c}$$
+
+
+\section{Interpolation og decimation}
+Decimation:
+$$Lavpas\rightarrow Decimer$$
+Interpolation:\\
+Udfyld med $L-1$ 0'er ind imellem samples. Lavpas filtrer for at fylde 0'erne.\\
+Up-sampling med ikke hel-tal:
+\begin{itemize}
+\item Udregn således at $faktor = \frac{L}{M}, L>M$
+\item Up-sample med faktor L
+\item Down-sample med faktor M
+\end{itemize}
+Down-sampling med ikke hel-tal:
+\begin{itemize}
+\item Udregn således at $faktor = \frac{M}{L}, M>L$
+\item Up-sample med faktor L
+\item Down-sample med faktor M
+\end{itemize}
+
+\section{Stokastiske signaler, herunder middelværd, varians, sandsynligheds-tæthedsfunktion og histogram}
+Middelværdi:
+$$x_{ave}\frac{x(1,\dots,N)}{N}$$
+Varians:
+$$\sigma^2=\frac{1}{N}\sum_{n=1}^{N}\left[x(n)-x_{ave}\right]^2$$
+$\sigma$ er gennemsnittet af afvigelsen fra middelværdien.
+\\
+Bessel's correction:
+$$\sigma^2_{unbiased}=\frac{1}{N-1}\sum_{n=1}^{N}\left[x(n)-x_{ave}\right]^2$$
+\\
+Histogram er muligheder ud af x-aksen og antallet af optrædender op af y-aksen.
+\section{Beregning af SNR i tids- og frekvens-domænet}
+\subsection{Tidsdomæne:}
+$$SNR=\frac{Signal effekt}{Noise effekt}$$
+Da signal og støj er uafhængigt så er: 
+$$x(n)=x_n(n)+x_s(n)$$
+Og da har man at:
+$$SNR=\frac{\sum\limits^{N-1}_{n=0}\left[x_s(n)\right]^2}{\sum\limits^{N-1}_{n=0}\left[x_n(n)\right]^2}$$
+Og vi har også at:
+$$\sigma^2=\sigma^2_n + \sigma^2_s$$
+Hvis signalet har 0 ved middelværdi f.eks. sinuskurve der er symmetrisk omkring x-aksen.
+$$SNR=\frac{\sigma_s^2}{\sigma_n^2}$$
+\subsection{Frekvensdomæne:}
+Estimat:
+$$SNR=\frac{\sum |X(m)|^2 \text{ iff. } |X(m)| > Threshold}{\sum |X(m)|^2 \text{ iff. } |X(m)| < Threshold}$$
+Threshold er en vurderingssag.
+\section{Midlingsfiltre}
+Bruges til at fjerne støj,\\
+FIR:
+$$y(n)=\frac{1}{N}\left[x(n),\dots,x(n-N+1)\right]$$
+IIR:
+$$y(n)=\frac{1}{N}\left[x(n)-x(n-N)\right]+y(n-1)$$
+$$H_{ma}(z)=H_{rma}(z)$$
+Output noise power:
+$$\sigma^2_{out}=\frac{\sigma^2_{in}}{N}$$\\
+\\
+Exponentielt midlingsfilter har hurtigere responstid og kan have et N der ikke er et heltal.
+$$y(n)=\alpha x(n)+ (1-\alpha)y(n-1)$$
+$$\alpha=\frac{2}{N-1}$$
+Jo højere $\alpha$ jo skarpere indsvingningstid men mere støj. Skift alpha over tid er tit brugt i praksis.
+\section{Case 1 - FSK transmission}
+\section{Case 2 - Audio filter}
+\section{Case 3 - Vejecelle}
+\end{document}

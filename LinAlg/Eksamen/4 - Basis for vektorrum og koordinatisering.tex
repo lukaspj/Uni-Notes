@@ -1,0 +1,191 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Basis og koordinatisering}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+        	
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    	\item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Ordnet basis}
+	Sættet $\{b_1,b_2,\dots,b_n\}$ er en basis for $V$ hvis 
+	de er lineært uafhængige.
+	
+	Normalt er rækkefølgen i en basis irrelevant, men i visse
+	tilfælde (deriblandt for koordinatisering) er det nødvendigt
+	at have dem ordnet: $[b_1,b_2,\dots,b_n]$.
+	
+	 \section{Theorem 3.4.1}
+	 Hvis $V=span(v_1,v_2,\dots,v_n)$ så for ethvert sæt af vektorer 
+	 i V $(u_1,u_2,\dots,u_m), m>n$ så er $u_i$'erne indbyrdes
+	 lineært afhængige.
+	 \\
+	 \\
+	 Da $V=span(v_1,v_2,\dots,\vDash_n)$ kan $u_i$'erne skrives 
+	 som en linearkombination af $v_j$'erne.
+	 $$u_i=\sum\limits_{j=1}^{n}a_{ij}v_j, \quad a_{ij}\in \mathbb{F}$$
+	 For at finde ud af om $u_i$'erne er uafhængige må der ikke
+	 være en ikke-triviel løsning til:
+	 $$\sum\limits_{i=1}^{m}c_iu_i=0$$
+	 Hvis vi erstatter $u_i$ med en linearkombination af $v_j$'erne 
+	 får vi:
+	 $$\sum\limits_{i=1}^{m}c_i\sum\limits_{j=1}^{n}a_{ij}v_j=
+	 \sum\limits_{j=1}^{n}\sum\limits_{i=1}^{m}(a_{ij}c_i)v_j$$
+	 \\
+	 \\
+	 Hvis vi nu nøjes med at kigge på produktet af $a_{ij}c_i$
+	 får vi:
+	 $$\sum\limits_{i=1}^{m}a_{ij}c_i=0,\text{ for } j=1,\dots,n$$
+	 Her er der flere ubekendte end der er ligninger da $m>n$,
+	 det er desuden et homogent system ($b=0$) derfor gælder
+	 teorem 1.2.1 der siger at der må være en ikke-triviel
+	 løsning.
+	 \\
+	 \\
+	 Vi skal nu vise at løsninger til:
+	 $$\sum\limits_{i=1}^{m}a_{ij}c_i=0,\text{ for } j=1,\dots,n$$
+	 også er løsninger til:
+	 $$\hat{c_1}u_1+\hat{c_2}u_2+\dots+\hat{c_m}u_m=0$$
+	 Hvor $\{\hat{c_1},\dots,\hat{c_m}\}, c_i \neq 0$ for flere 
+	 $c_i$'er.\\
+	 Hvilket løsningerne er, da vi kan indsætte 0:
+	 $$\sum\limits_{j=1}^{n}\sum\limits_{i=1}^{m}0v_j=0$$
+	
+	\section{Koordinatvektor}
+	$V$ er et vektorrum og $E=[v_1,v_2,\dots,v_n]$ er en ordnet
+	basis for $V$. Hvis $v$ er et element af $V$, så kan $v$ 
+	skrives på formen:
+	$$v=c_1v_1+c_2v_2+\dots + c_nv_n$$
+	hvor $c_1,c_2,\dots c_n$ er skalarer. Vi kan nu associere
+	enhver vektor $v$ med en unik vektor $c=(c_1,c_2,\dots c_n)^T$ 
+	i $\mathbb{R}^n$. Denne vektor $c$ kaldes koordinatvektoren 
+	for $v$ ift. den ordnede basis $E$ og skrives:
+	$$[v]_E$$
+	$c_i$'erne kaldes koordinaterne for $v$ relativt til $E$.
+	
+	\section{Lemma 3.3.2}
+	Koordinatisering bevarer lineære strukturer:
+	\begin{enumerate}
+	\item $[v+w]_E=[v]_E+[W]_E$
+	\item $[rv]_E=r[v]_E$
+	\end{enumerate}
+	1:\\
+	Lad $v,w\in V$, $v$ og $w$ kan skrives som:
+	$$v=c_1v_1+\cdots+c_nv_n,\, w=d_1+\cdots+d_nv_n$$
+	Da er $v+w=(c_1+d_1)v_1+\cdots+(c_nd_n)v_n$ og så gælder der:
+	$$[v+w]_E=\begin{bmatrix}
+	c_1+d_1\\
+	\vdots\\
+	c_nd_n
+	\end{bmatrix}=\begin{bmatrix}
+	c_1\\
+	\vdots\\
+	c_n
+	\end{bmatrix}+\begin{bmatrix}
+	d_1\\
+	\vdots\\
+	d_n
+	\end{bmatrix}
+	=[v]_E+[w]_E$$
+	2:\\
+	Lad $v\in V$, $v$ kan da skrives som:
+	$$v=c_1v_1+\cdots+c_nv_n$$
+	Da er $rv=rc_1v_1+\cdots+rc_nv_n$ og
+	$$[rv]_E=\begin{bmatrix}
+	rc_1\\
+	\vdots\\
+	rc_n
+	\end{bmatrix}=r\begin{bmatrix}
+	c_1\\
+	\vdots\\
+	c_n
+	\end{bmatrix}
+	=r[v]_E$$
+	
+	?? ----
+	
+	Hvis et vektorrum $V$ har $dim(n)$ så kan $V$ koordinatiseres
+	så den "efterligner" $\mathbb{R}^n$. Vi kan dermed arbejde med
+	koordinatiseringen med samme værktøjer som ved rummet 
+	$\mathbb{R}^n$ 
+	
+	---- ??
+    
+\end{document}

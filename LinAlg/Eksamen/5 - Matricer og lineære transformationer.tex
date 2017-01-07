@@ -1,0 +1,180 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Matricer og lineære transformationer}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+        	
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    	\item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Lineær transformation}
+	En afbildning $L$ fra et vektorrum $V$ til $W$ kaldes en lineær
+	transformation hvis den respekterer lineær struktur, dvs.:
+	$$L(\alpha v_1 + \beta v_2) = \alpha L(v_1) + \beta L(v_2)$$
+	$\forall v_1,v_2\in V \wedge \alpha,\beta \in \mathbb{F}$\\
+    \\
+    Lineære transformationer fra $V$ til $W$ skrives som:
+    $$L:V\rightarrow W$$
+    Af definitionen for lineære transformation følger:
+    $$L(0_v)=0_w$$
+    $$L(\sum\limits_{i=1}^{n}a_iv_i) = \sum\limits_{i=1}^{n}a_iL(v_i)$$
+    $$L(-v)=-L(v)$$
+    
+    \section{Kernen}
+    Kernen $ker(L)$ er alle de vektorer $v$ hvor $L(v)$ giver nulvektoren. 
+    Skrevet formelt som:
+    
+    Lad $L:V\rightarrow W$. Da er kernen af $L$:
+    $$ker(L)=\{v\in V|L(v)=0_w \}$$
+    
+    \section{Billedet/Range}
+    $L:V\rightarrow W$ er en lineær tranformation og lad $S$ være et
+    underrum af $V$. Billedet af $S$, skrevet $L(S)$ er defineret som:
+    $$L(S)=\{w\in W|w=L(v), v\in S \}$$
+    Billedet af et komplet vektorrum, $L(V)$, kaldes for range $L$.
+    
+    \section{Theorem 4.1.1}
+    Hvis $L:V\rightarrow W$ er en lineær transformation og $S$ er et underrum af $V$, så gælder der:
+    \begin{enumerate}[i]
+    \item $ker(L)$ er et underrum af $V$.
+    \item $L(s)$ er et underrum af $W$.
+    \end{enumerate}
+    Det er trivielt at $ker(L)$ ikke er tom, da nulvektoren $0_v$
+    er i $ker(L)$.\\
+    For at bevise $(i)$ skal $ker(L)$ være lukket under 
+    skalarmultiplikation og  addition af vektorer. Hvis $v\in ker(L)$
+    og $\alpha$ er en skalar, så gælder der:
+    $$L(\alpha v)=\alpha L(v) = \alpha 0_w=0_w$$
+    Derfor er $\alpha v \in ker(L)$. Altså er $ker(L)$ lukket 
+    under skalarmultiplikation.
+    
+    $v_1,v_2\in ker(L)$ så gælder der:
+    $$L(v_1+v_2)=L(v_1)+L(v_2)=0_w+0_w=0_w$$
+    Derfor lukket under vektoraddition.
+    \\
+    \\
+    Beviset for $(ii)$ minder om det foregående. $L(S)$ er ikke-tom
+    da $0_w=L(0_v)\in L(S)$. Hvis $w\in L(S)$, så er $w=L(v)$ for
+    nogle $v\in S$\\
+    For $\alpha in \mathbb{F}$ gælder der:
+    $$\alpha w = \alpha L(v) = L(\alpha v)$$
+    Siden $\alpha v \in S$ så følger det at $\alpha w \in L(S)$ - 
+    lukket under skalar.\\
+    Hvis $w_1,w_2 \in L(S)$, så eksisterer $v_1,v_2 \in S$ således
+    at $L(v_1)=w_1$ og $L(v_2)=w_2$. Altså gælder der:
+    $$w_1+w_2=L(v_1)+L(v_2)=L(v_1+v_2)$$
+    Derfor lukket under addition.
+    
+    \section{Theorem 4.2.1}
+    Hvis $L:\mathbb{R}^n\rightarrow \mathbb{R}^m$ så eksisterer $A\in \mathbb{R}^{m,n}$ således at:
+    $$L(x)=Ax, \forall x \in \mathbb{R}^n$$
+    Faktisk er den j'te søjlevektor for $A$ givet ved:
+    $$a_j=L(e_j)\text{ for } j=1,2,\dots,n$$
+    \\
+    \\
+    For $j=1,\dots,n$ defineres:
+    $$a_j=L(e_j)$$
+    matricen $A$ dannes ved:
+    $$A=(a_{ij})=(a_1,a_2,\dots,a_n)$$
+    En arbitrær vektor $x\in \mathbb{R}^n$ kan skrives som
+    koefficienter ganget med elementær vektorer:
+    $$x=x_1e_1+x_2e_2+\dots+x_ne_n$$
+    Hvor $e_i$ er:
+    $$e_i=\begin{pmatrix}
+    0\\
+    \vdots\\
+    1 \\
+    \vdots \\
+    0
+    \end{pmatrix}\leftarrow\text{ i'te indgang}$$
+    Så gælder der:
+    \begin{align*}
+    	L(x)&=x_1L(e_1)+x_2L(e_2)+\dots+x_nL(e_n)\\
+    	&=x_1a_1+x_2a_2+\dots+x_na_n\\
+    	&=(a_1,a_2,\dots,a_n)\begin{bmatrix}
+    	x_1\\
+    	x_2\\
+    	\vdots\\
+    	x_n
+    	\end{bmatrix}\\
+    	&=Ax
+    \end{align*}
+    
+\end{document}

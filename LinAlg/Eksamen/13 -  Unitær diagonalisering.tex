@@ -1,0 +1,197 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Unitær diagonalisering}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+    
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    \item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Hermitiske matricer}
+	$M=(m_{ij})\in \mathbb{C}^{m,n}$. $M$ er hermitisk såfremt matricen
+	konjungeret og transponeret er lig sig selv. Dette skrives som $M=M^H$.
+	En hermitisk matrix er det samme som en symmetrisk matrix for det
+	reelle rum, blot for komplekse tal.
+	
+	Desuden gælder der at egenværdierne af en hermitisk matrix alle
+	er reelle.
+		
+	\section{Unitære matricer}
+	En matrix $U\in \mathbb{C}^n$ er en unitær matrix hvis dens søjlevektorer
+	udgører et ortonormalt sæt i $\mathbb{C}^n$.
+	
+	En matrix er unitær hvis og kun hvis der gælder at $U^HU=I$.
+		
+	\section{Schurs theorem}
+	For enhver $n \times n$ matrix $A$ eksisterer der
+	en unitær $n \times n$ matrix $U$, således at 
+	$U^HAU$ er øvre triangulær.
+	\\
+	\\
+	Vi beviser Schurs vha. induktion i $n$.
+	\\
+	\\
+	\underline{$n=1$}\\
+	At det gælder for $n=1$ er trivielt da en $1 \times 1$
+	matrix pr. definition allerede er triangulær, og det
+	derfor er let at finde en unitær matrix for dette
+	tilfælde.
+	\\
+	\\
+	\textit{\underline{Induktionshypotese:}}\\
+	Som induktionshypotese antager vi at påstanden gælder
+	for $k \times k$ matricer.
+	\\
+	\\
+	\underline{$n=k+1$}\\
+	Vi definerer $A$ som en $k+1 \times k+1$ matrix, hvor
+	$\lambda_1$ er en egenværdi og $w_1$ den tilhørende
+	egenvektor.\\
+	Vha. Gram-Schmidt konstrueres en ortonormal basis for 
+	$\mathbb{C}^{k+1}$ bestående af vektorerne
+	$\{w_1,\dots,w_{k+1}\}$.\\
+	Hvis $W$ så er en matrix med dette sæt som søjlevektorer,
+	så er $W$ unitær.\\
+	Den første søjle i $W^HAW$ er så:
+	$$W^HAw_1=\lambda W^Hw_1=\lambda_1e_1$$
+	Derved har matrixen $W^HAW$ formen:
+	$$W^HAW=\begin{bmatrix}[c|ccc]
+	\lambda_1 & x_2 & \cdots & x_{k+1} \\ \hline
+	0 & & & \\
+	\vdots & & M & \\
+	0 & & &
+	\end{bmatrix}$$
+	Hvor $M$ er en $k \times k$ matrix. Vha. induktionshypotesen
+	ved vi der findes en unitær $k \times k$ matrix $V_1$ 
+	således at $V_1^HMV_1=T_1$ er øvre triangulær.\\
+	Vi kan så danne $V$:
+	$$V=\begin{bmatrix}[c|ccc]
+		1 & 0 & \cdots & 0 \\ \hline
+		0 & & & \\
+		\vdots & & V_1 & \\
+		0 & & &
+		\end{bmatrix}$$
+ Som så vil være unitær g:
+ $$V^HW^HAWV=\begin{bmatrix}[c|ccc]
+    	\lambda_1 & x_2 & \cdots & x_{k+1} \\ \hline
+    	0 & & & \\
+    	\vdots & & V_1^HMV_1 & \\
+    	0 & & &
+    	\end{bmatrix}=
+    	\begin{bmatrix}[c|ccc]
+   		\lambda_1 & x_2 & \cdots & x_{k+1} \\ \hline
+   		0 & & & \\
+   		\vdots & & T_1 & \\
+   		0 & & &
+   		\end{bmatrix}
+   		=T$$
+   	$T$ er så øvre triangulær. Vi lader nu $U=WV$. Da er 
+   	$U$ så unitær siden:
+   	$$U^HU=(WV)^HWV=V^HW^HWV=I$$
+   	Og $U^HAU=T$.
+   	
+   	\textbf{Note: Schur decomposition}
+   	Faktoriseringen $A=UTU^H$ bliver ofte kaldt 
+   	dekompositionen af $A$.
+   	
+   	\section{Spektralsætningen}
+   	Hvis $A$ er hermitisk så eksisterer der en unitær 
+   	matrix $U$ der diagonaliserer $A$.
+   	\\
+   	\\
+   	Vha. Schurs theorem ved vi at der eksisterer en
+   	unitær matrix $U$ således at $U^HAU=T$, hvor $T$
+   	er øvre triangulær. Det følger derfor:
+   	$$T^H=(U^HAU)^H=U^HA^HU=U^HAU=T$$
+   	(Husk at $(ABC)^H=C^HB^HA^H$)\\
+   	Altså er $T$ hermitisk og må derved også være
+   	diagonal.
+   	$$T=\begin{bmatrix}
+   	t_{11} & \cdots & t_{1n} \\
+   	0 & \ddots & \vdots \\
+   	0 & 0 & t_{nn}
+   	\end{bmatrix},
+   	T^H=\begin{bmatrix}
+	   	\bar{t_{11}} & 0 & 0 \\
+	   	\vdots & \ddots & 0 \\
+	   	\bar{t_{1n}} & \cdots & \bar{t_{nn}}
+	   	\end{bmatrix}$$
+	
+\end{document}

@@ -1,0 +1,171 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Indre produkt}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+    
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    \item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Reelt indre produkt}
+	Et indre produkt på vektorrummet $V$ er en operation på $V$
+	der tildeler et reelt tal til ethvert par af vektorer. Det
+	skrives således: $\inner{x}{y}$
+	Der gælder følgende regler:
+	\begin{enumerate}
+	\item $\inner{x}{x} \geq 0$ med lighed hvis og kun hvis $x=0$.
+	\item $\inner{x}{y}=\inner{y}{x}, \forall x,y\in V$ 
+	\item $\inner{\alpha x + \beta y}{z}=
+	\alpha\inner{x}{z}+\beta\inner{y}{z}, 
+	\forall x,y,z \in V \quad \wedge \quad \alpha, \beta \in \mathbb{F}$
+	\end{enumerate}
+	
+	Et vektorrum med et indre produkt kaldes et indre produktrum.
+	Som eksempel har $\mathbb{R}^n$ det indre produkt defineret
+	som $\inner{x}{y} = y^Tx$.
+	
+	Det indre produkt for komplekse tal er defineret som:
+	$$\inner{u}{v}=\sum\limits_{i=1}^{n}\bar{u_i}v_i$$
+	Desuden gælder der for $\mathbb{C}^n$ at: $\inner{u}{v} = 
+	\bar{\inner{v}{u}}$. $\mathbb{C}^n$ har det indre produkt
+	defineret som $\inner{x}{y}=y^Hx$
+	
+	\section{Norm og ortogonalitet}
+	Længden, eller norm, af $v\in V$ hvor V er et indre produktrum er:
+	$$\|v\|=\sqrt{\inner{v}{v}}$$
+	To vektorer $v$ og $u$ er ortogonale såfremt $\inner{v}{u}=0$
+	
+	\section{Theorem 5.4.1}
+	\textbf{(Pythagoras)} Hvis $u$ og $v$ er ortogonale 
+	($\inner{u}{v}=0$) i et inder produktrum $V$ så gælder der:
+	$$\|u+v\|^2=\|u\|^2+\|v\|^2$$
+	\\
+	\\
+	\begin{align*}
+	\|u+v\|^2&=\inner{u+v}{u+v}\\
+	&= \inner{u}{u} + \inner{u}{v} + \inner{v}{u} + \inner{v}{v}
+	&= \|u\|^2+\|v\|^2
+	\end{align*}
+	Altså gælder Pythagoras' lov for et givent indre produktrum.
+	
+	\section{Projektion}
+	$V\subseteq \mathbb{C}$ er et indreproduktrum.\\
+	Hvis $u,v\in V,\, v\neq 0$ så er skalarprojektionen af
+	$u$ på $v$:
+	$$\alpha = \frac{\inner{u}{v}}{\|v\|}$$
+	Vektor projektionen er:
+	$$p = \alpha\left(\frac{1}{\|v\|}v\right) = 
+	\frac{\inner{u}{v}}{\inner{v}{v}}v$$
+	
+	\section{Theorem 5.4.2}
+	Hvis $u$ og $v$ er tilfældige vektorer i et indre
+	produktrum $V$, så gælder der:
+	$$|\inner{u}{v}|\leq \|u\|\cdot\|v\|$$
+	Lighed iff $u$ og $v$ er lin. afh.
+	
+	\subsection{Lemma. Egenskaber for projektionsvektorer}
+	$u,v\in V$ og $p$ er projektionen $u$ på $v$ så gælder der:
+	\begin{enumerate}
+	\item $u-p$ og $p$ er ortogonale ($\inner{u-p}{p}=0$).
+	\item $u=p$ iff $u=\alpha v$
+	\end{enumerate}
+	
+	\textbf{Bevis for theoremet}\\
+	Hvis $v=0$, så er det trivielt at se, at:
+	$$|\inner{u}{v}|=0=\|u\|\cdot \|v\|$$
+	Hvis $v\neq 0$, lader vi $p$ være en vektor
+	projektion af $u$ på $v$.\\
+	Siden $p$ er ortogonal til $u-p$ (lemma 1.),
+	så følger det af Pythagoras at:
+	$$\|p\|^2+\|u-p\|^2=\|u-p+p\|^2=\|u\|^2$$
+	Derved får vi:
+	$$\frac{\inner{u}{v}^2}{\|v\|^2}=\|p\|^2=\|u\|^2-\|u-p\|^2$$
+	Vi kan gange $\|v\|^2$ ind for at få $\inner{u}{v}^2$
+	og får så:
+	$$\inner{u}{v}^2=\|u\|^2\|v\|^2-\|u-p\|^2\|v\|^2\leq \|u\|^2\|v\|^2$$
+	Da vi ved at $\|u-p\|^2\|v\|^2$ er positivt 
+	da det er i anden. Vi får så til sidst:
+	$$|\inner{u}{v}|\leq\|u\|\cdot\|v\|$$
+	Hvor lighed kun er gældenden når $u=p$ fordi
+	så bliver $\|u-p\|^2=0$. Det følger så af
+	lemmaet at ligheden gælder hvis $v=0$ eller
+	$u=\alpha v$ altså hvis de er lineært afhængige.
+	
+\end{document}

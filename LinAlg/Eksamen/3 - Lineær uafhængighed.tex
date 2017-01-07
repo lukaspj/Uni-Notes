@@ -1,0 +1,150 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Lineære uafhængighed}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+        	
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    	\item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Lineær uafhængighed}
+	Et sæt $\{v_1,v_2,\dots,v_n\}$ af vektorer er lineært uafhængige såfremt der gælder at linear kombinationen imellem dem kun giver $0$ når alle $c_i$'erne er $0$.
+	
+	Hvis der eksisterer et $c_i\neq 0$ så vil mindst en af vektorerne kunne skrives som en linear kombination af de andre.
+	 
+	\section{Spanning set}
+	$V=span(v_1,v_2,\dots, v_n)$ hvis: $$\forall x \in V, \exists c_1, c_2, \dots, c_n: x=c_1v_1,c_2v_2,\dots,c_nv_n$$
+	Altså $x$ er en lineær kombination af vektorerne i spanning sættet.
+	
+	\section{Basis}
+	Et spanning sæt er en basis hvis disse er lineært uafhængige.
+	    
+	 \section{Theorem 3.3.1}
+	 $$x_1,x_2,\dots,x_n \in \mathbb{R}^n$$
+	 $$X=(x_1,x_2,\dots,x_n)$$
+	 $$x_1,x_2,\dots,x_n \text{ lin. afh. iff } X \text{ singulær}$$
+	 \\
+	 $$c_1x_1+c_2x_2+\dots+c_nx_n=0$$
+	 $$Xc=0$$
+	 $Xc$ har ikke-trivielle løsninger hvis og kun hvis 
+	 $X$ er singulær. Hvis $X$ ikke er singulær, er den
+	 invertibel. Hvis $X$ er invertibel findes der en 
+	 invers matrix $X^{-1}$ som man kan gange på ligningen:
+	 $$X^{-1}Xc=0X^{-1}$$
+	 $$c=0\implies lin. uafh.$$
+	 
+	 \section{Theorem 3.4.1}
+	 Hvis $V=span(v_1,v_2,\dots,v_n)$ så for ethvert sæt af vektorer 
+	 i V $(u_1,u_2,\dots,u_m), m>n$ så er $u_i$'erne indbyrdes
+	 lineært afhængige.
+	 \\
+	 \\
+	 Da $V=span(v_1,v_2,\dots,\vDash_n)$ kan $u_i$'erne skrives 
+	 som en linearkombination af $v_j$'erne.
+	 $$u_i=\sum\limits_{j=1}^{n}a_{ij}v_j, \quad a_{ij}\in \mathbb{F}$$
+	 For at finde ud af om $u_i$'erne er uafhængige må der ikke
+	 være en ikke-triviel løsning til:
+	 $$\sum\limits_{i=1}^{m}c_iu_i=0$$
+	 Hvis vi erstatter $u_i$ med en linearkombination af $v_j$'erne 
+	 får vi:
+	 $$\sum\limits_{i=1}^{m}c_i\sum\limits_{j=1}^{n}a_{ij}v_j=
+	 \sum\limits_{j=1}^{n}\sum\limits_{i=1}^{m}(a_{ij}c_i)v_j$$
+	 \\
+	 \\
+	 Hvis vi nu nøjes med at kigge på produktet af $a_{ij}c_i$
+	 får vi:
+	 $$\sum\limits_{i=1}^{m}a_{ij}c_i=0,\text{ for } j=1,\dots,n$$
+	 Her er der flere ubekendte end der er ligninger da $m>n$,
+	 det er desuden et homogent system ($b=0$) derfor gælder
+	 teorem 1.2.1 der siger at der må være en ikke-triviel
+	 løsning.
+	 \\
+	 \\
+	 Vi skal nu vise at løsninger til:
+	 $$\sum\limits_{i=1}^{m}a_{ij}c_i=0,\text{ for } j=1,\dots,n$$
+	 også er løsninger til:
+	 $$\hat{c_1}u_1+\hat{c_2}u_2+\dots+\hat{c_m}u_m=0$$
+	 Hvor $\{\hat{c_1},\dots,\hat{c_m}\}, c_i \neq 0$ for flere 
+	 $c_i$'er.\\
+	 Hvilket løsningerne er, da vi kan indsætte 0:
+	 $$\sum\limits_{j=1}^{n}\sum\limits_{i=1}^{m}0v_j=0$$
+    
+    
+\end{document}

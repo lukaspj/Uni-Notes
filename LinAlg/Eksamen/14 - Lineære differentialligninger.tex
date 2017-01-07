@@ -1,0 +1,141 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Lineære differentialligninger}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+    
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    \item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Lineært differentialligningssystem}
+	Der er forskel på et differentialligningssystem 
+	og et lineært ligningssystem.\\
+	Et lineært differentialligningssystem er et system 
+	af $m$ ligninger med $n$ ubekendte, hvor disse kan 
+	skrives som:
+	\begin{align*}
+	y_1'=a_{11}y_1+a_{12}y_2+\dots + a_{1n}y_n\\
+	y_2'=a_{21}y_1+a_{22}y_2+\dots + a_{2n}y_n\\
+	\dots\\
+	y_m'=a_{m1}y_1+a_{m2}y_2+\dots + a_{mn}y_n
+	\end{align*}
+	$$y_i:I\rightarrow \mathbb{K}^n$$
+	Kan også skrives på matrix form som:
+	
+	\begin{equation}
+	Y'=AY
+	\end{equation}
+	
+	\section{Løsningsform}
+	For $n=1$ kender vi løsningen som:
+	$$y'=ay\implies y(t)=ce^{at}$$
+	En generel løsning for $n>1$ er:
+	$$Y=\begin{bmatrix}
+	x_1e^{\lambda t}\\
+	\vdots\\
+	x_ne^{\lambda t}
+	\end{bmatrix}=e^{\lambda t}x$$
+	
+	\section{Bevis for løsningsform}
+	Hvis man differentiere $e^{\lambda t}x$ får vi:
+	$$Y'=\lambda e^{\lambda t}x=\lambda Y$$
+	Vi vil nu vise $AY=\lambda Y=Y'$, hvilket vi
+	kan gøre hvis vi vælger $\lambda$ til at være en
+	egenværdi for $A$ og $x$ den tilhørende egenvektor.
+	Så får vi:
+	$$AY=Ae^{\lambda t}x=\lambda e^{\lambda t}x = \lambda Y = Y'$$
+	$A e^{\lambda t}x$ svarer til at gange a på en
+	skaleret egenvektor derfor kan $A$ erstattes
+	med $\lambda$.
+	
+	\section{Lineærkombination er også en løsning}
+	Hvis $Y_1$ og $Y_2$ begge er løsninger til $Y'=AY$, så er
+	lineærkombinationen af disse også en løsning.
+	
+	\section{Bevis for lineærkombination}
+	Vi skal vise at $Y'=A(\alpha Y_1+ \beta Y_2)$
+	\begin{align*}
+	(\alpha Y_1 + \beta Y_2)' &= \alpha Y_1'+ \beta Y_2'\\
+	&= \alpha A Y_1+\beta AY_2\\
+	&=A(\alpha Y_1 + \beta Y_2)
+	\end{align*}
+	
+	\textit{Nu er du fucked.}
+\end{document}

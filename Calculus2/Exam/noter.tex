@@ -1,0 +1,539 @@
+\documentclass{article}
+\usepackage{amssymb, amsmath}
+\usepackage[utf8]{inputenc}
+
+\title{Calculus 2 noter eksamen}
+
+\begin{document}
+\section{Gradient og retningsafledede}
+{\tiny Baseret på opgave 2}
+
+$$f(x,y)=13x^2 y^3$$
+
+\subsection{Gradienten}
+
+\subsubsection{Partielle afledede}
+Den partielle afledede af funktionen f er:
+$$f_x(x,y)=2*13xy^3 = 26xy^3$$
+
+\subsubsection{Beregning af gradienten}
+Beregn gradienten af funktionen f.
+$$ \triangledown f(x,y)=(f_x(x,y),f_y(x,y))$$
+$$ \triangledown f(x,y)=(f_x(x,y),39x^2y^2)$$
+
+\subsubsection{Beregning af gradient i punkt}
+Gradienten af f i punktet (1,-1)
+$$\triangledown f(1,-1)=(26y^3,39x^2)$$
+
+\subsection{Retningsafledede}
+
+\subsubsection{Enhedsvektoren}
+Enhedsvektoren {\bf u} i retningen givet ved vektoren (6,6)
+$$u=\frac{1}{\sqrt{6^2 + 6^2}}(6,6)=\frac{1}{\sqrt{72}}(6,6)$$
+Enhedsvektoren {\bf u} i retningen givet ved vinklen $\frac{5\pi}{4}$
+$$u=(cos(\frac{5\pi}{4}), sin(\frac{5\pi}{4}))=(-\frac{\sqrt{2}}{2}, 
+-\frac{\sqrt{2}}{2}) = $$
+$$-\frac{\sqrt{2}}{\sqrt{2}*\sqrt{2}}(1,1)=-\frac{1}{\sqrt{2}}(1,1)$$
+
+\subsubsection{Retningsafledede i punkt}
+Den retningsafledede $D_u f(1,-1)$ hvor u er enhedsvektoren.
+$$D_u f(x,y)= \triangledown f(x,y) * u$$
+$$D_u f(1,-1) = 26y^3*\frac{6}{\sqrt{72}} + 39y^2*\frac{6}{\sqrt{72}} = 
+\frac{26y^3*6+39x^2*6}{\sqrt{72}}$$
+$$\frac{26y^3*6+39x^2*6}{\sqrt{2}*\sqrt{36}} = 
+\frac{26y^3*6+39x^2*6}{\sqrt{2}*\sqrt{6}}$$
+$$\frac{26y^3+39x^2}{\sqrt{2}} = \frac{26 * (-1)^3+39*1^2}{\sqrt{2}} = 
+\frac{13}{\sqrt{2}}$$
+
+\subsubsection{Største og mindste retningsafledede i punkt}
+Den enhedsvektor v, der giver den største retningsafledede (den der vokser 
+hurtigst) er:
+$$u=\frac{\triangledown f(x,y)}{|\triangledown f(x),y|})$$
+Den retning hvor f aftager hurtigst er:
+$$u=-\frac{\triangledown f(x,y)}{|\triangledown f(x,y)|}$$
+\vspace{3mm}
+Den største retningsafledede i punktet (1,-1) er:
+$$v=\frac{(26y^3,39x^2)}{\sqrt{(26y^3)^2+(39x^2)^2}}$$
+$$v=\frac{(-26,39)}{\sqrt{(-26)^2+(39)^2}}$$
+$$v=\left(\frac{-26}{\sqrt{(-26)^2+(39)^2}},\frac{39}{\sqrt{(-26)^2+(39)^2}}\right)
+ = \frac{1}{\sqrt{13}}(-2,3)$$
+
+\subsubsection{Værdien af den største retningsafledede i punkt}
+Værdien af den største retningsafledede $D_uf(x)$ er $|\triangledown f(x)|$\\\\
+Værdien af den største retningsafledede af $f$ i punktet (1,-1)
+$$D_v f(1,-1)=\sqrt{(26y^3)^2+(39x^2)^2}$$
+$$D_v f(1,-1)=\sqrt{(-26)^2+39^2)}=13*\sqrt{13}$$
+\newpage
+\section{Egenværdier og egenvektorer}
+{\tiny Baseret på opgave 2}
+$$A=\begin{pmatrix}
+1 & 0 & 1\\
+1 & 0 & 1\\
+1 & 0 & 1
+\end{pmatrix}$$
+
+\subsection{Egenværdier}
+
+\subsubsection{Det karakteristiske polynomium}
+Det karakteristiske polynomium $P(\lambda)$ for $A$ er:
+$$|A-\lambda I| = \begin{vmatrix}
+1-\lambda & 0 & 1\\
+1 & 0-\lambda & 1\\
+1 & 0 & 1-\lambda
+\end{vmatrix} = ((1-\lambda)*(-\lambda)*(1-\lambda))-(-\lambda)$$
+$$|A-\lambda I| = -\lambda^3+2\lambda^2$$
+
+\subsubsection{Bestemmelse af egenværdierne}
+Egenværdierne for A er løsningerne til det karakteristiske polynomium:\\
+\begin{displaymath}
+solve(P(\lambda),\lambda)
+\end{displaymath}
+For A bliver det:
+$$\lambda_1 = 0, \hspace{5mm} \lambda_2 = 0, \hspace{5mm} \lambda_3 = 2$$
+
+\subsection{Egenvektorer}
+Egenvektorer findes ved $(A-\lambda I)u=0$
+For vores matrix A med egenværdien $\lambda_2$ bliver det:
+$$\begin{pmatrix}
+1-0 & 0 & 1\\
+1 & 0-0 & 1\\
+1 & 0 & 1-0
+\end{pmatrix}u=0$$
+
+Hvis vi bringer matricen på echelon form får vi:
+$$\begin{pmatrix}x&y&z\end{pmatrix}=\begin{pmatrix}
+1 & 0 & 1\\
+0 & 0 & 0\\
+0 & 0 & 0
+\end{pmatrix}u=0$$
+Vi kan se at der kun er 1 pivot, altså den første kolonne og der er 2 frie 
+variable. Derfor får vi 2 egenvektorer.\\
+Den første egenvektor finder vi ved at tage den første frie variable, der er 
+den anden kolonne (eller y-variablerne) og flytter y over på den anden side af 
+lighedstegnet.\\
+Hvis vi gør det for alle den første og den anden række og sætter $u_y=1$ får vi:
+$$u_x=x+z=0$$
+$$u_y=1$$
+$$u_z=0=0$$
+Og vi får således den første egenvektor til at være:
+$$\begin{pmatrix}0\\1\\0\end{pmatrix}$$
+Det samme gør vi så for den tredje kolonne altså z.
+$$v_x=x=-z$$
+$$v_y=0=0$$
+$$v_z=1$$
+$$\begin{pmatrix}-1\\0\\1\end{pmatrix}$$
+Det er så de to egenvektorer.
+
+\subsubsection{Egenrum}
+Egenrummet udspændes af alle vektorer af formen $t*u$ hvor u er egenvektoren.
+For vores matrix bliver det $t(0,1,0)$ og $t(-1,0,1)$
+Og vi får så vores egenrum til at blive:
+$$span(
+\begin{pmatrix}0\\1\\0\end{pmatrix},
+\begin{pmatrix}-1\\0\\1\end{pmatrix}
+)$$
+
+\subsubsection{Beregning af vektor når u er en egenvektor for matricen A}
+$u$ er en egenvektor for matricen A hørende til egenværdien $\lambda_1=0$. Så 
+kan vi beregne følgende vektor:
+$$100A^2u+50u=?u$$
+$$Au=\lambda u$$
+$$100\lambda^2u+50=?u$$
+$$100*0^2u+50u=?u$$
+$$50u=50u$$
+
+\newpage
+
+\section{Dobbeltintegraler}
+{\tiny Baseret på opgave 2}
+\subsection{Partiel integration}
+For at beregne værdien af det partielle integral
+$$\int\limits_{min}^{max}f(x)dx$$
+Integrerer vi udtrykket og trækker den nedre grænse fra den øvre grænse.
+$$\int\limits_{min}^{max}f(x)dx = [F(x)]^{max}_{min} = F(max) - F(min)$$
+
+$$\int\limits_{0}^{\sqrt[4]{16-x^4}}4y^3dy = [x^4]^{\sqrt[4]{16-x^4}}_0 = 
+\sqrt[4]{16-x^4}^4 - 0^4=16-x^4$$
+
+\newpage
+
+\section{Overbestemte ligningssystemer}
+{\tiny Baseret på opgave 2}\\
+\begin{center}
+\begin{tabular}{c | c | c | c | c}
+x & -2 & 0 & 2 & 4\\
+\hline
+y & 1 & 2 & 4 & 5
+\end{tabular}
+\end{center}
+\subsection{Opstilling af overbestemt ligningssystem}
+For at opstille et ligningssystem på formen Ac=y til bestemmelse af vektoren 
+$c=(c_0,c_1)^T$ laver vi følgende matricer:
+$$\begin{pmatrix}
+1&x_1\\
+...\\
+1&x_n
+\end{pmatrix}
+\begin{pmatrix}
+c_0\\c_1
+\end{pmatrix}
+=
+\begin{pmatrix}
+y_1\\
+...\\
+y_n
+\end{pmatrix}
+$$
+For den givne tabel bliver det:
+$$\begin{pmatrix}
+1&-2\\
+1&0\\
+1&2\\
+1&4
+\end{pmatrix}
+\begin{pmatrix}
+c_0\\c_1
+\end{pmatrix}
+=
+\begin{pmatrix}
+1\\
+2\\
+4\\
+5
+\end{pmatrix}
+$$
+
+\subsection{Normalligningerne}
+For at udregne normalligningerne $A^TAc=A^Ty$ er det lettest først at finde 
+$A^T$ og gange det ind på A og y og til sidst få en ligning på formen:
+$$A^TA
+\begin{pmatrix}
+c_0\\c_1
+\end{pmatrix} = A^Ty$$
+$A^T$ for den givne tabel er:
+$$\begin{pmatrix}
+1 & 1 & 1 & 1\\
+-2 & 0 & 2 & 4
+\end{pmatrix}$$
+Så kan vi finde $A^TA og A^Ty$
+$$A^TA=\begin{pmatrix}
+4 & 4\\
+4 & 24
+\end{pmatrix}$$
+$$A^Ty=\begin{pmatrix}
+12\\
+26
+\end{pmatrix}$$
+Vi får så normalligningen til:
+$$\begin{pmatrix}
+4 & 4\\
+4 & 24
+\end{pmatrix}
+\begin{pmatrix}
+c_0\\c_1
+\end{pmatrix} =
+\begin{pmatrix}
+12\\26
+\end{pmatrix}$$
+For at finde $c_0$ og $c_1$ ved hjælp af normalligningerne løser vi de to 
+ligninger:
+$$4c_0+4c_1=12$$
+$$4c_0+24c_1=26$$
+$$c_0 = \frac{23}{10}, \hspace{5mm} c_1 = \frac{7}{10}$$
+
+\subsection{Afvigelsesvektoren}
+Afvigelsesvektoren findes ved $Ac-y$
+For vores tabel bliver det:
+$$\begin{pmatrix}
+1&-2\\
+1&0\\
+1&2\\
+1&4
+\end{pmatrix}
+\frac{1}{10}\begin{pmatrix}
+23\\7
+\end{pmatrix}
+-
+\begin{pmatrix}
+1\\
+2\\
+4\\
+5
+\end{pmatrix}
+=
+\frac{1}{10}\begin{pmatrix}
+-1\\
+3\\
+-3\\
+1
+\end{pmatrix}$$
+
+\newpage
+
+\section{Second derivatives test}
+{\tiny Baseret på opgave 2}
+$$f(x,y)=1+3x-2y-x^3+y^2$$
+
+\subsection{Kritiske punkter}
+For at finde de kritiske punkter finder vi de partielle afledte og sætter dem 
+begge lig med 0.
+$$f_x = 0$$
+$$f_y = 0$$
+Og finder så alle løsninger til ligningssystemet.\\
+For funktionen $f$ bliver det:
+$$f_x(x,y) = -3x^2+3$$
+$$f_y(x,y) = 2y-2$$
+$$-3x^2+3=0$$
+$$2y-2=0$$
+Så får vi:
+$$(-1,1), \hspace{5mm} (1,1)$$
+
+\subsection{Den kritiske værdi}
+Den kritiske værdi kan findes ved at sætte det kritiske punkt ind i funktionen. 
+For funktionen $f$ bliver det:
+$$f(-1,1) = 1-3-2+1+1 = -2$$
+
+\subsection{Second derivatives test}
+Man kan udregne teststørrelsen D i andenordenskriteriet ved at finde de dobbelt 
+afledte og sætte dem ind i følgende ligning:
+$$D=f_{xx}(x,y)f_{yy}(x,y)-(f_{xy}(x,y))^2$$
+For funktionen $f$ bliver det:
+$$f_{xx} = -6x$$
+$$f_{yy} = 2$$
+$$f_{xy} = 0$$
+$$D=-6x*2-0 = -12x$$
+
+\subsection{Arten af det kritiske punkt}
+For at finde arten af det kritiske punkt kigger man på differential kvotienten 
+og $f_{xx}$.\\
+\renewcommand{\arraystretch}{1.4}
+\begin{center}
+\begin{tabular}{c | c | c}
+D & $f_{xx}$ & art\\
+\hline 
+$D > 0$ & $f_{xx}(x,y) > 0$ & $f(x,y)$ er et lokalt minimum\\
+\hline
+$D > 0$ & $f_{xx}(x,y) < 0$ & $f(x.y)$ er et lokalt maksimum\\
+\hline
+$D < 0$ & Irrelevant & $f(x,y)$ er et saddelpunkt\\
+\hline
+$D = 0$ & Irrelevant & Det er ikke til at sige ud fra denne test
+
+\end{tabular}
+\end{center}
+
+\newpage
+
+\section{Taylorrækker}
+{\tiny Baseret på opgave 8923}
+
+\subsection{Taylorrækker}
+En taylor serie er defineret som:
+$$f(x)=\sum\limits_{n=0}^{\infty}\frac{f^{(n)}(a)}{n!}(x-a)^n = f(a) + 
+\frac{f'(a)}{1!}x+\frac{f''(a)}{2!}x^2+...$$
+
+\subsection{Maclaurinrækken}
+En Maclaurin række er en taylor række hvor man tager $f(0)$\\
+En Maclaurinrække er defineret som:
+$$f(x)=\sum\limits_{n=0}^{\infty}\frac{f^{(n)}(0)}{n!}x^n = f(0) + 
+\frac{f'(0)}{1!}x+\frac{f''(0)}{2!}x^2+...$$
+For $cos(x)$ er en Maclaurin række defineret som:
+$$\sum\limits_{n=0}^{\infty}(-1)^n\frac{x^{2n}}{(2n)!}=1-\frac{x^2}{2!}+\frac{x^4}{4!}-\frac{x^6}{6!}...$$
+For $sin(x)$ er en Maclaurin række defineret som:
+$$\sum\limits_{n=0}^{\infty}(-1)^n\frac{x^{2n+1}}{(2n+1)!}=x-\frac{x^3}{3!}+\frac{x^5}{5!}-\frac{x^7}{7!}...$$
+
+\subsection{Potensrækker}
+En potensrækker er defineret som:
+$$\sum\limits_{n=0}^{\infty}C_n(x-a)^n=C_0+C_1(x-a)+C_2(x-a)^2+...$$
+
+\newpage
+
+\section{Lagrange ligninger}
+{\tiny Baseret på opgavesæt 7543}
+$$f(x,y)=x^2+y^2-xy, \hspace{5mm} g(x,y)=e^{x+y}$$
+
+\subsection{Opstilling af Lagrange ligningen}
+For at opstille en Lagrange ligning med bibetingelsen $g(x,y)=k$ i et punkt 
+$(x_0,y_0)$ udnytter man at:
+$$\triangledown f(x,y) = \lambda \triangledown g(x,y)$$
+og
+$$g(x,y)=k$$
+Så får man 3 ligninger:
+$$f_x=\lambda g_x, \hspace{5mm} f_y=\lambda g_y, \hspace{5mm} g(x,y)=k$$
+Hvis vi gør det for funktionen f får vi:
+$$\triangledown f=(2x-y, 2y-x), \hspace{5mm} \triangledown g=(e^{x+y},e^{x+y})$$
+$$2x-y=\lambda e^{x+y}$$
+$$2y-x=\lambda e^{x+y}$$
+$$e^{x+y}=k$$
+Og det er så vores tre Lagrange ligninger
+
+\subsection{Ekstemumspunkter}
+I de tre Lagrange ligninger er der 3 ubekendte, derfor kan man finde 
+ekstremumspunkterne ved at finde alle løsninger til de 3 ligninger.
+Hvis vi gør dette for f under bibetingelsen $g(x,y)=e^2$ får vi:
+$$2x-y=\lambda e^{x+y}$$
+$$2y-x=\lambda e^{x+y}$$
+$$e^{x+y}=e^2$$
+Når vi løser dette ligningssystem får vi punktet $(1,1)$ som er et muligt 
+ekstremumspunkt\\[5mm]
+Vi kan se at det er et minimumspunkt da funktionen er uendeligt voksende og 
+derfor kun vil have et enkelt ekstremumspunkt som er et minimums punkt
+
+\newpage
+
+\section{Ortogonale projektioner}
+{\tiny Baseret på opgavesæt 4111}\\
+Følgende vektorer er i rummet $\Re^3$
+$$u=(1,2,2), \hspace{5mm} x=(1,3,1)$$
+
+\subsection{Længden af vektoren}
+Her bruger man blot Pythagoras sætning:
+$$||v||=\sqrt{v_x^2+v_y^2+v_z^2}$$
+For vektoren x bliver det:
+$$||x||=\sqrt{1^2+3^2+1^2}=\sqrt{11}$$
+
+\subsection{Afstand mellem vektorer}
+Afstanden mellem to vektorer, givet to vektorer i rummet $\Re^3$ $u$ og $v$ er 
+defineret som $||u-v||$:
+$$||u-v|| = \sqrt{(u_x-v_x)^2+(u_y-v_y)^2+(u_z-v_z)^2}$$
+For de givne vektorer x og u bliver det:
+$$||u-x||=\sqrt{(1-1)^2+(2-3)^2+(2-1)^2}$$
+
+\subsection{Skalarprodukt}
+Skalarproduktet eller prikproduktet mellem to vektorer, givet to vektorer i 
+rummet $\Re^3$ $u$ og $v$ er defineret som:
+$$u\cdot v = u_xv_x+u_yv_y+u_zv_z$$
+For de givne vektorer x og u bliver det:
+$$u\cdot x = 1*1 + 2*3 + 2*1 = 9$$
+
+\subsection{Den ortogonale projektion}
+Den ortogonale projektion af p af vektoren $\omega$ på underrummet U kan 
+skrives som den linearkombination hvor koefficienterne er løsningen på 
+ligningssystemet. Hvis underrummet har dimensionen 3 kan det skrives som:
+$$p=\alpha_1v_1+\alpha_2v_2+\alpha_3v_3$$
+Hvilket kan skrives som formlen:
+$$p=A(A^TA)^-1A^T\omega$$
+Hvor $A=(v_1,v_2,v_3)$ og $v_n$ er basisvektorer for underrummet.\\
+Den ortogonale projektion $v$ af vektoren $x$ på underrummet $U$ udspændt af 
+vektoren $u$ kan da findes ved:
+$$u(u^Tu)^{-1}u^tx=\begin{pmatrix}
+1\\2\\2
+\end{pmatrix}$$
+Da $A=U=span(u)=u$
+
+\subsection{Den mindste afstand til et underrum}
+Givet projektionen $p$ af vektorn $v$ på underrummet $U$ er den mindste afstand:
+$$||v-p||$$
+For den givne vektor $x$ med projektionen $p$ på underrummet $U$ bliver det:
+$$||x-p||\sqrt{(1-1)^2+(3-2)^2+(1-2)^2}=\sqrt{(2)}$$
+\newpage
+
+\section{Differential ligningssystemer}
+{\tiny Baseret på Opgavesæte 7543}
+$$y_1'=ay_1+y_2$$
+$$y_2'=ay_1+y_2$$
+$$u_1=\begin{pmatrix}
+1\\1
+\end{pmatrix}$$
+$$u_2=\begin{pmatrix}
+1\\-a
+\end{pmatrix}$$
+$$\lambda_1 = a+1, \hspace{5mm} \lambda_2=1$$
+\subsection{Løsning af systemer på formen $x'=A*x$}
+Hvis et ligningssystem har form $x'=Ax$ er løsningen:
+$$x(t)=Ce^{At}$$
+$\lambda_n$ og $v_n$ er henholdsvist systemets egenværdier og egenvektorer. Vi 
+kan så finde den fuldstændige løsning ved:
+$$x(t)=C_1e^{\lambda_1t}v_1+C_2e^{\lambda_2t}v_2+...$$
+Vi kan se at det givne ligningssystem kan skrives som:
+$$\begin{pmatrix}
+y_1'(t)\\
+y_2'(t)
+\end{pmatrix}=
+\begin{pmatrix}
+a & 1\\
+a & 1
+\end{pmatrix}\begin{pmatrix}
+y_1(t)\\
+y_2(t)
+\end{pmatrix}$$
+Hvilket passer på $y'=A*y$\\
+Vi kan så finde den fuldstændige løsning til ligningssystemet:
+$$y(t)=C_1e^{(1+a)t}u_1+C_2e^{1*t}u_2$$
+
+\subsection{Linearkombinationer}
+{\tiny Opgave 4111 7.5}\\
+En vektor der kan skrives på formen $x_1v_1+x_2v_2$ med $x_1,x_2\in\Re$ kaldes 
+en linearkombination af vektorerne $v_1$ og $v_2$.\\
+Mængden af alle linearkombinationerne af $v_1$ og $v_2$ betegnes med 
+$span(v_1,v_2)$
+Hvis vi har givet i linearkombinationen: $v=C_1u_1+C_2u_2$ har givet vektorerne 
+$v, u_1$ og $u_2$ kan vi finde $C_1$ og $C_2$ som to ligninger med to ubekendte
+
+\newpage
+
+\section{Polære koordinater}
+{\tiny Baseret på opgave 7543}
+$$D=sin(x^2+y^2)$$
+\subsection{Området D i polære koordinater}
+Når man skal beskrive et område i polærekoordinater bruger man formen:
+$$\{(r,\theta)|u\leq\theta\leq v, R_1\leq r\leq R_2 \}$$
+Hvor u er den mindste vinkel (i radianer) og v er den største. $R_1$ er den 
+mindste radius og $R_2$ er den første.\\
+For D bliver det:
+$$\{(r,\theta)|0\leq\theta\leq 2\pi, 1\leq r\leq 3 \}$$
+
+
+\newpage
+
+\section{Matrix regning}
+\subsection{Matrix multiplikation ($A*B$)}
+For at gange to matricer sammen skal man gange rækker med søjler.
+Man tager det første tal i den første række i den første matrix og ganger det 
+ind på det første tal i den første kolonne i den anden matrix og lægger det 
+sammen med det andet tal i den første række i den første matrix og lægger det 
+sammen med det andet tal i den anden kolonne i den anden matrix for at finde 
+det andet tal i anden kolonne i første række.\\
+Altså:
+\begin{verbatim}
+1. række * 1. søjle = 1.tal i 1. række.
+2. række * 1. søjle = 1.tal i 2. række.
+1. række * 2. søjle = 2.tal i 1. række.
+3. række * 2. søjle = 2.tal i 3. række.
+\end{verbatim}
+\subsection{Transponering ($A^T$)}
+Når man transponerer en matrix spejlvender og roterer man den. Dvs.
+$$\begin{pmatrix}
+1 & 2\\
+3 & 4\\
+5 & 6
+\end{pmatrix}^T
+\sim
+\begin{pmatrix}
+2 & 1\\
+4 & 3\\
+6 & 5
+\end{pmatrix}
+\sim
+\begin{pmatrix}
+1&3&5\\
+2&4&6
+\end{pmatrix}
+$$
+
+
+Note: $A*B=A^TB$
+\newpage
+\section{Pensum}
+\begin{description}
+\item [{[L]} 5] Projektioner og ortogonalitet
+\item [{[L]} 6] Egenværdier og egenvektorer
+\item [{[S]} 8.5] Potensrækker
+\item [{[S]} 8.6] Represæntation af funktioner ved potensrækker
+\item [{[S]} 8.7] Taylor- og Maclaurin rækker
+\item [{[S]} 11.6] Retningsafledet og gradient vektoren
+\item [{[S]} 11.7] Maksimums- og minimumsværdier
+\item [{[S]} 12.3] Dobbeltintegraler over generelle områder
+\item [{[S]} 12.4] Dobbeltintegraler i polære koordinater
+\end{description}
+\end{document}

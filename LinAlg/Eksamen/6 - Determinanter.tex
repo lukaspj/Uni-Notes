@@ -1,0 +1,229 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Determinanter}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+    
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    	\item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Determinant}
+	Determinanten for en $n \times n$ matrix $A$
+	er:
+	$$det(A)=a_{11}A_{11}+a_{12}A_{12}+ \dots + a_{1n}A_{1n}$$
+	Hvor $A_{ij}$ for $1\leq i, j\leq n$ siges at være den $(i,k)$'te
+	cofaktor af $A$ givet som:
+	$$A_{ij}=(-1)^{i+j}det(M(A)_{ij})$$
+	\textbf{OBS: hvis $n=1$ så er determinanten blot $a_{11}$}\\
+	En matrix $A$ er invertibel såfremt $det(A)\neq 0$, dette hedder også at $A$ ikke er singulær.
+	
+	\section{Egenskaber ved determinanter}
+	\begin{itemize}
+	\item For enhver $n\times n$ matrix $A$ har vi $det(A)=det(A^T)$
+	\item Hvis en matrix er triangulær, kan determinanten findes ved 
+	blot at finde produktet af diagonalelementerne.
+	\item Hvor to rækker el. søjler af en $n \times n$ matrix er ens,
+	så er $det(A)=0$.
+	\item Hvis to rækker af en $n \times n$ matrix byttes om, så er
+	$det(A')=-det(A)$.
+	\item Hvis en række ganges med en skalar $r$ bliver determinanten
+	$r\cdot det(A)$
+	\item Hvis et multiplum af en række bliver adderet til en anden 
+	række, så forbliver determinanten den samme.
+	\end{itemize}
+	De sidste 3 = ERO'er.
+	
+	\section{Theorem 2.1.2}
+	Hvis $A$ er en $n\times n$ matrix så er $det(A^T)=det(A)$.
+	\\
+	\\
+	Vha. induktion.\\
+	Basistilfældet er nemt da vi har en $1 \times 1$ 
+	matrix som er symmetrisk hvorved $A^T=A \implies 
+	det(A^T)=det(A)$.\\
+	I induktionshypotesen antager vi nu at det gælder 
+	for $k \times k$, så  skal vi i induktionsskridtet 
+	se om det holder for $k+1 \times k+1$.\\
+	Vi starter med at lave cofaktor-ekspansion på første
+	række af den nye $A$:
+	$$det(A)=a_{1,1}det(M_{1,1})-a_{1,2}det(M_{1,2})+\dots 
+	\pm a_{1,k+1}det(M_{1,k+1}) $$
+	$M_{ij}$'erne må være $k \times k$ matricer fordi de
+	er er $A$ med en række og en søjle fjernet. ($k+1-1$).
+	Så følger det af induktionshypotesen at (da det gælder
+	for $k \times k$ matricer):
+	$$det(A)=a_{1,1}det(M_{1,1}^T)-a_{1,2}det(M_{1,2}^T)+\dots 
+		\pm a_{1,k+1}det(M_{1,k+1}^T) $$
+	Nu er cofaktor-ekspansion af første række af $A$ nu 
+	blot lig med cofaktor-ekspansion af første søjle af
+	$A^T$. Derved må der gælde:
+	$$det(A^T)=det(A)$$
+	Det er første søjle fordi at man først tager minoren
+	og derefter transponerer.
+	
+	\section{Theorem 2.2.2}
+	En $n \times n$ matrix $A$ er singulær hvis og kun hvis:
+	$$det(A)=0$$
+	\\
+	\\
+	$A$ kan blive reduceret til REF vha. et endeligt antal
+	ERO'er:
+	$$U=E_kE_{k-1}\dots E_1A$$
+	hvor $U$ er i REF og $E_i$'erne er elementærmatricer. Det
+	ses så:
+	\begin{align*}
+	det(U)&=det(E_kE_{k-1}\dots E_1A)\\
+	&=det(E_k)det(E_{k-1})\dots det(E_1)det(A)
+	\end{align*}
+	Siden determinanterne af $E_i$'erne alle er ikke-nul, så
+	følger det at $det(A)=0$ hvis og kun hvis $det(U)=0$.
+	Hvis $A$ ikke er singulær, så er $U$ triangulær med $1$'er
+	ned langs diagonalen og derved er $det(U)=1$.\\
+	Altså er $A$ singulær hvis og kun hvis $det(A)=0$.
+	
+	\subsection*{Uddyb elementær matricer.. Hvad kaldes $e_i$?}
+	
+	\section{Note. Adjungerede matrix}
+	\textbf{Note:} $For 1\leq i, j\leq n$ er den $(i,j)$'te
+	kofaktor $A_{ij}$ af $A$ givet som:
+	$$A_{ij}=(-1)^{i+j}det(M(A)_{ij})$$
+	
+	Den adjungerede til $A \in \mathbb{F}^{n,n}$ er en 
+	matrix hvor hver indgang $a_{ij}$ er erstattet med 
+	dets kofaktor $A_{ij}$ og matricen er transponeret.
+	
+	Det følger at:
+	$$A(adj(A))=det(A)I$$
+	Og hvis A ikke er singulær kan det skrives om til:
+	$$I=A(\frac{1}{det(A)}adj(A)) \Leftrightarrow A^{-1}
+	=\frac{1}{det(A)}adj(A)$$
+    
+    \section{Theorem 2.3.1}
+    \textbf{(Cramers regel)} Lad $A$ være en $n \times n$ 
+    invertibel matrix og lad $b\in \mathbb{R}^n$. Lad
+    $A_i$ være matrixen der fås ved at erstatte den $i$'te
+    søjle i $A$ med $b$. Den entydige løsning til systemet
+    $Ax=b$ er givet ved;
+    $$x_i=\frac{det(A_i)}{det(A)},\, i=1,\dots,n$$
+    \\
+    \\
+    $A^{-b}$ er den entydige løsning til $Ax=b$. Så vi har
+    $$x=A^{-1}b=\frac{1}{det(A)}adj(A)b$$
+    Og for $i=1,\dots,n$
+    \begin{align*}
+    x&=A^{-1}b=\frac{1}{det(A)}(\text{i'te række i }adj(A))b\\
+    &=\frac{1}{det(A)}(A_{1i}b_1+\dots+A_{ni}b_n)\\
+    &=\frac{det(A_i)}{det(A)}
+    \end{align*}
+    $det(A_i)=(A_{1i}b_1+\dots+A_{ni}b_n)$ fordi at $A_i$
+    er $A$ med den $i$'te søjle byttet ud med $b$ og
+    $adj(A)_{ji}=A_{ji}=(-1)^{i+j}det(M(A)_{ij})$
+    
+    \section{Eks. Cramers regel $2 \times 2$ matrix}
+    Vi antage vi har følgende lineære ligningssystem:
+    $$ax+by=e\,cx+dy=f$$
+    Som kan skrives som:
+    $$\begin{bmatrix}
+    a & b\\
+    c & d
+    \end{bmatrix}\begin{bmatrix}
+    x \\ y
+    \end{bmatrix}=\begin{bmatrix}
+    e \\ f
+    \end{bmatrix}$$
+    Så kan $x$ og $y$ findes vha. Cramers regel:
+    $$x=\frac{\begin{vmatrix}
+    e & b \\
+    f & d
+    \end{vmatrix}}{
+    \begin{vmatrix}
+    a & b \\
+    c & d
+    \end{vmatrix}}= \frac{ed-bf}{ad-bc}$$
+    Og..
+    $$x=\frac{\begin{vmatrix}
+    a & e \\
+    c & f
+    \end{vmatrix}}{
+    \begin{vmatrix}
+    a & b \\
+    c & d
+    \end{vmatrix}}= \frac{af-ec}{ad-bc}$$
+\end{document}

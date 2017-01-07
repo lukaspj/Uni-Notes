@@ -1,0 +1,135 @@
+% Dokumentklassen sættes til memoir.
+% Manual: http://ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf
+\documentclass[a4paper,oneside,article]{memoir}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+ 
+% Danske udtryk (fx figur og tabel) samt dansk orddeling og fonte med
+% danske tegn. Hvis LaTeX brokker sig over æ, ø og å skal du udskifte
+% "utf8" med "latin1" eller "applemac". 
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage[T1]{fontenc}
+ 
+% Matematisk udtryk, fede symboler, theoremer og fancy ting (fx kædebrøker)
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+%\usepackage{mathtools}
+ 
+% Kodelisting. Husk at læse manualen hvis du vil lave fancy ting.
+% Manual: http://mirror.ctan.org/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings}
+ 
+% Fancy ting med enheder og datatabeller. Læs manualen til pakken
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.pdf
+%\usepackage{siunitx}
+
+% Indsættelse af grafik.
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+%\usepackage{subcaption}
+ 
+% Reaktionsskemaer. Læs manualen for at se eksempler.
+% Manual: http://www.ctan.org/tex-archive/macros/latex/contrib/mhchem/mhchem.pdf
+%\usepackage[version=3]{mhchem}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm}
+
+\usepackage{xcolor,colortbl}
+
+\usepackage{listings}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\small, %\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+  
+\newcommand{\inner}[2]{\langle #1,#2 \rangle}
+
+\begin{document}
+    \title{Lineær algebra noter - Ortogonale og ortonormale baser}
+    \author{Lukas Peter Jørgensen, 201206057, DA4
+            }
+    \maketitle
+    
+    \tableofcontents
+        
+    \chapter{Disposition}
+    \begin{enumerate}
+    \item TBD
+    \end{enumerate}
+    
+	\chapter{Noter}
+	
+	\section{Ortogonalt sæt}
+	Et sæt af vektorer $\{v_1,v_2,\dots,v_n\}$ er ortogonale hvis:
+	$$\inner{v_j}{v_i}=0 \text{ for } i\neq j$$
+	Dette sæt er en basis hvis det opfylder definitionen for en
+	basis.
+	
+	\section{Basis}
+	Sættet $\{v_1,v_2,\dots,v_n\}$ er en basis for $V$ hvis 
+	vektorerne i sættet indbyrdes er lineært uafhængige og spanner
+	$V$.
+	
+	\section{Ortonormalt sæt}
+	Et sæt af vektorer $\{v_1,v_2,\dots,v_n\}$ er ortonormalt hvis:
+	\begin{itemize}
+	\item Sættet er ortogonalt
+	\item Sættet består af enhedsvektorer (er normeret).
+	\end{itemize}
+	$$\inner{v_i}{v_j} = \delta_{ij} \left\{ \begin{array}{ll}
+		         1 & \mbox{for i=j},\\
+		        0 & \mbox{ellers}\end{array} \right.$$
+		        
+	\section{Theorem 5.5.1}
+	Hvis $\{v_1,\dots,v_n\}$ er et ortogonalt set af ikke-nul
+	vektorer i et indre produktrum $V$, så er $v_1,\dots,v_n$ 
+	lineært uafhængige.
+	\\
+	\\
+	$v_1,\dots,v_n$ er ortogonale og ikke-nul vektorer.
+	$$c_1v_1+\cdots+c_nv_n=0$$
+	For $1\leq j \leq n$ får man ved at tage det indreprodukt
+	af $v_j$ på begge sider af udregningen:
+	$$c_j\inner{v_j}{v_1}+\cdots+c_n\inner{v_j}{v_n}=0$$
+	$$c_j\inner{v_j}{v_j}=0$$
+	Og derved må alle skalarer være 0 - altså er $v_i$'erne
+	uafhængige.
+	
+	\section{Theorem 5.5.2}
+	Lad $\{u_1,\dots,u_n\}$ være en ortonormal basis for et 
+	indre produktrum $V$. Hvis der så gælder:
+	$$v=\sum\limits_{i=1}^{n}c_iu_i$$
+	Så er $c_i=\inner{v}{u_i}$.
+	\\
+	\\
+	Vi udregner $\inner{v}{u_i}$:
+	$$\inner{v}{u_i}=\inner{\sum\limits_{j=1}^{n}c_ju_j}{u_i}
+	=\sum\limits_{j=1}^{n}(c_j\inner{u_j}{u_i})
+	=\sum\limits_{j=1}^{n}c_j\delta_{ji}=c_i$$
+	
+\end{document}
