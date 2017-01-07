@@ -138,4 +138,61 @@
     Now, there are some distance-measures that take the branch-weights into 
     account.
     
+    The Robinson Foulds distance can be taken into account by, for each edge, 
+    compute the difference of the weights. If an edge exists in one and not the 
+    other (i.e. the case where we would nomrally count one up) we add the 
+    complete weight of the edge.
+    
+    \subsubsection{Computing the Quartet distance}
+    The triplet and quartet distance are very close, I will focus on the 
+    Quartet distance.
+    
+    First let's look at some of the cases, the Quartet distance counts the 
+    number of quartets where the two trees disagree. To this end there are 
+    ``resolved'' and ``unresolved'' cases, the unresolved case, is when all the 
+    leaves are connected through a single node (all same parent).
+    
+    If both $T_1$ and $T_2$ deems the quartet to be unresolved, then they agree 
+    if either one or the other think it's unresolved then they disagree. If 
+    they both think it's resolved then they agree if they have the same 
+    topology. So we count the number of times they disagree. The number of 
+    quartets is $\begin{pmatrix}
+    n\\
+    4
+    \end{pmatrix}$.
+    \\
+    \\
+    Let's just look at binary trees, if we are dealing with binary trees, then 
+    the unresolved case is not possible, thus we just look at the quartets 
+    where the topologies differ.
+    
+    A dynamic programming approach, conceptually we simply say that each edge 
+    is oriented both ways, we then say that $F_1 \xrightarrow{e_1}(F_2, F_3)$ 
+    in $T_1$, \textit{claims} all quartets, $ij|kl$ with $i,j \in F_1$ and 
+    either $ k \in F_2$ and $l \in F_3$ or vice versa, where $F_1$ is the tree 
+    behind the edge and $F_2, F_3$ is the two subtrees in front of the edge. 
+    Every shared quartet is counted twice, so we divide by two. Giving us the 
+    formula:
+    
+    \begin{equation*}
+        Count(e_1,e_2) = \begin{pmatrix}
+        |F_1 \cap G_1|\\
+        2
+        \end{pmatrix}
+        (|F_2 \cap G_2| \cdot |F_3 \cap G_3| + |F_2 \cap G_3| \cdot |F_3 \cap 
+        G_2|)
+    \end{equation*}
+    \begin{equation*}
+        d_{quartet}=\begin{pmatrix}
+        n\\
+        4
+        \end{pmatrix}
+        - \frac{1}{2} \sum_{e_1,e_2} Count(e_1, e_2)
+    \end{equation*}
+    
+     and then we count the how many of these edges $ij 
+    \rightarrow kl$ are claimed by both trees. This can be done in \bigO{n^2}.
+    
+    There is another way that is based on tree coloring that can do it in 
+    \bigO{n \log n}
 \end{document}
