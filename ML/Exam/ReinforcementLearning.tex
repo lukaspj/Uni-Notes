@@ -345,6 +345,14 @@
     backgammon) then it is incredibly expensive.
     
     \subsubsection{Generalized Policy Iteration}
+    In generalized policy iteration (GPI), we maintain both an approximate 
+    policy and an approximate value function. The value function is repeatedly 
+    altered to approximate the value function for the current policy, and the 
+    current policy is repeatedly improved with respect to the current value 
+    function. In a way they move against each other, as they create a moving 
+    target for each other, but they cause both policy and value function to 
+    approach optimality.
+    
     This is a simple overview of the generalized policy iteration:
     \begin{itemize}
         \item While improving repeat
@@ -354,6 +362,219 @@
     Here we may choose not to visit all states, but in most cases we will still 
     converge in polynomial time.
     
-    \subsection{Monte carlo algorithms}
+    \subsection{Monte Carlo algorithms}
+    Up until now, we have assumed complete knowledge of the environment (finite 
+    states and actions). Monte Carlo algorithms, allows us to learn from just 
+    \textit{experience} -- we cample sequences of states, action and rewards 
+    without any prior knowledge of the environment's dynamics.
     
+    In the Monte Carlo methods, we want to sovle the reinforcement learning 
+    problem based on averaging sample returns. Furthermore instead of computing 
+    the value functions (as we did in DP), we here want to learn the value 
+    functions instead.
+    
+    What if we looked at just the state-value function, how would we try to 
+    estimate that? The obvious solution here, is to average all the returns 
+    observed after visits to that state. As we observe more and more returns, 
+    the average should converge to the expected value. This is the underlying 
+    idea of all Monte Carlo algorithms.
+    
+    In order to ensure well-defined returns are available, we will only 
+    consider Monte Carlo for episodic tasks.
+    
+    \subsubsection{Estimating $v_\pi(s)$}
+    $v_\pi(s)$ is the value of a state $s$ under policy $\pi$, given a set of 
+    episodes obtained by following $\pi$ and passing through $s$. Each 
+    occurrence of state $s$ in an episode is called a \textit{visit} to $s$. It 
+    may happen that we visit $s$ multiple times in an episode, so we will look 
+    at the \textit{first visit} to $s$. Let's first look at a theoretical 
+    algorithm which computes the value of $s$ in the first visit to $s$:
+    \begin{algorithm}
+        \caption{First-visit MC policy evaluation}
+        \begin{algorithmic}
+            \State \textit{// Initialize:}
+            \State $\pi \gets$ policy to be evaluated
+            \State $V \gets $ an arbitrary state-value function
+            \State $Returns(s) \gets $ an empty list, for all $s \in S$
+            \State
+            \Loop \, forever
+                \State Generate an episode using $\pi$
+                \ForAll{state $s$ in the episode}
+                    \State $G \gets $ return following the first occurence of 
+                    $s$
+                    \State Append $G$ to $Returns(s)$
+                    \State $V(s) \gets \average(Returns(s))$
+                \EndFor
+            \EndLoop
+        \end{algorithmic}
+    \end{algorithm}
+    
+    We could also have explored the \textit{every-visit MC method}, which has 
+    some different properties and extends more naturally to function 
+    approximation, but First-visit MC has been more widely studied.
+    
+    First-visit MC converges quadratically to $v_\pi(s)$ as the number of 
+    first-visits to $s$ 
+    goes to infinity. An alternative, finite option, is to loop for some time 
+    or some number of episodes.
+    
+    \subsubsection{Estimation of action values}
+    If a model is available, we can simply look ahead in the next possible 
+    states and pick the action that leads to the best state. If no model is 
+    available, then we have to estimate the values of the action (e.g. speed of 
+    vehicle) we should pick in order to get to the best state and maximize 
+    reward.
+    
+    In other words, one of the primary goals for Monte Carlo methods is to 
+    estimate $q_*$, which is the optimal value we get when we take action $a$ 
+    from state $s$. In order to estimate this, we may run a First-visit MC 
+    method as before, just visiting state-action pairs instead of just states. 
+    Again, this will converge quadratically as before.
+    
+    The complication is that many state-action pairs may never be visited. If 
+    $\pi$ is a deterministic policy, then following $\pi$ one will only observe 
+    returns from one action from each state (as it is deterministic). Therefore 
+    the Monte Carlo estimates of the other actions from that state will not 
+    improve with experience. This is the general problem of \textit{maintaining 
+    exploration} i.e. we must assure that we are continually exploring other 
+    options in order to attempt to find a better one. One way to solve this, is 
+    to say that we start in a state-action pair, and every state-action pair 
+    has a nonzero probability of being selected as the start. We call this the 
+    assumption of \textit{exploring starts}.
+    
+    \textit{Exploring starts}, is not really useful when we learn by actual 
+    interacting with an environment as we cannot simply start from any state we 
+    want. In this case, the most common alternative approach is to only 
+    considering stochastic policies with only nonzero probabilities.
+    
+    \subsubsection{Approximating optimal policies}
+    Let us consider a Monte Carlo version of classical policy iteration. We can 
+    perform policy evaluation as described in the previous section (estimation 
+    of action values). If we assume that:
+    \begin{itemize}
+        \item We observe an infinite number of episodes.
+        \item The episodes are generated with exploring starts.
+    \end{itemize}
+    Then the Monte Carlo methods will compute each $q_{\pi_k}$ exactly for 
+    arbitrary $\pi_k$.
+    
+    Now we just need to figure out how to perform policy-improvements. We can 
+    improve on our policy with a simple greed policy with respect to the 
+    current value function. We can then compute for each $s \in S$ the policy 
+    $\pi$:
+    \begin{equation*}
+        \pi(s) = \arg\max_a q(s,a)
+    \end{equation*}
+    We can then construct each $\pi_{k+1}$ as the greedy policy with respect to 
+    $q_{\pi_k}$, and we get that the policy improvement theorem applies since:
+    \begin{align*}
+        q_{\pi_k}(s,\pi_{k+1}(s)) &= q_{\pi_k}(s, \arg\max_a q_{\pi_k}(s,a))
+    \end{align*}
+    This assures us that each $\pi_{k+1}$ is uniformly better than or just as 
+    good as $\pi_k$. If it is just as good as $\pi_k$ then they are both 
+    optimal policies.
+    
+    \subsubsection{Monte Carlo without infinite episodes}
+    We made two unlikely assumptions in order to easily obtain this guarantee 
+    of convergence. One was that the episodes has exploring starts, the other 
+    was that we could run for infinitely many episodes. We will try to remove 
+    the latter assumption here and then return to exploring starts afterwards.
+   
+    There are two primary ways to combat the infinite episodes assumption, one 
+    approach is to estimate some bounds on magnitude and probability of error 
+    and run until these bounds are sufficiently small. This will guarantee 
+    correct convergence up to some level of approximation, however it is likely 
+    to require far too many episodes to be useful in practice.
+    
+    The second approach is to avoid trying to complete policy evaluation before 
+    returning for improvement and simply move the value function \textit{toward}
+    $q_{\pi_k}$. One extreme example of this was the value iteration, in which 
+    only one iteration of iterative policy evaluation is performed between 
+    improvements. Or the in-place version where we alternate between 
+    improvement and evaluation steps for single states.
+    
+    For Monte Carlo policy evaluation it is natural to alternate between 
+    evaluation and improvement on an episode-by-episode basis. After each 
+    episode we evaluate the policy and then improve it at all the visited 
+    states. We can describe this algorithm as follows:
+    
+    \begin{algorithm}
+        \caption{Monte Carlo ES (Exploring Starts)}
+        \begin{algorithmic}
+            \State \textit{// Initialize, for all } $s\in S, a\in A(s)$:
+            \State $Q(s,a) \gets$ arbitrary
+            \State $\pi(s) \gets$ arbitrary
+            \State $Returns(s,a) \gets$ empty list
+            \State
+            \Loop\, forever
+                \State Choose $S_0 \in S$ and $A_0 \in A(S_0)$ s.t. all pairs 
+                have probability $> 0$
+                \State Generate an episode starting from $S_0, A_0$ following 
+                $\pi$
+                \ForAll{pairs $s,a$ appearing in the episode}
+                    \State $G \gets$ return following the first occurence of 
+                    $s,a$
+                    \State Append $G$ to $Returns(s,a)$
+                    \State $Q(s,a) \gets \average(Returns(s,a))$
+                \EndFor
+                \ForAll{states $s$ in the episode}
+                    \State $\pi(s) \gets \arg \max_a Q(s,a)$
+                \EndFor
+            \EndLoop
+        \end{algorithmic}
+    \end{algorithm}
+    
+    \subsubsection{Monte Carlo without Exploring Starts}
+    Now, how can we avoid the unlikely assumption of exploring starts? The only 
+    general way to ensure that all actions are selected infinitely often is for 
+    the agent to continue to select them. We have two approaches to ensuring 
+    that this happens, we call it \textit{on-policy} methods  and 
+    \textit{off-policy} methods. On-policy attempts to evaluate or improve the 
+    policy used to make decision whereas off-policy methods evaluate or improve 
+    a different policy. The ES method above is an example of an on-policy 
+    method. We will explore on-policy methods more here, and not go into 
+    details with off-policy.
+    
+    Here we will look at $\epsilon$-greedy policies, which with probability 
+    $1-\epsilon$ will simply follow the policy $\pi$, but with probability 
+    $\epsilon$ it will select a uniformly random action. So each action has 
+    probability $\frac{\epsilon}{|A(s)|}$ of being picked, except the estimated 
+    optimal action which also has probability $1-\epsilon$ of being picked, 
+    yielding the algorithm:
+    
+    \begin{algorithm}
+        \caption{On-policy first-visit MC control (for $\epsilon$-soft 
+        policies)}
+        \begin{algorithmic}
+            \State \textit{// Initialize}
+            \ForAll{$s \in S$ and $a \in A(s)$}
+                \State $Q(s,a) \gets$ arbitrary
+                \State $Returns(s,a) \gets$ empty list
+                \State $\pi(a|s) \gets$ an arbitrary $\epsilon$-soft policy
+            \EndFor
+            
+            \Loop\, forever
+                \State Generate an episode using $\pi$
+                \ForAll{pairs $s,a$ appearing in the episode}
+                    \State $G \gets$ return following the first occurence of 
+                    $s,a$
+                    \State Append $G$ to $Returns(s,a)$
+                    \State $Q(s,a) \gets \average(Returns(s,a))$
+                \EndFor
+                \ForAll{visited states $s$ in the episode}
+                    \State $A^* \gets \arg\max_a Q(s,a)$
+                    \ForAll{$a \in A(s)$}
+                        \State $\pi(a|s) \gets \begin{cases}
+                        1-\epsilon + \frac{\epsilon}{|A(s)|},&\text{ if 
+                        }a=A^*\\
+                        \frac{\epsilon}{|A(s)|},&\text{ if } a \neq A^*
+                        \end{cases}$
+                    \EndFor
+                \EndFor
+            \EndLoop
+        \end{algorithmic}
+    \end{algorithm}
+    
+    This holds under the policy improvement theorem, although I will not prove 
+    this here.
 \end{document}
