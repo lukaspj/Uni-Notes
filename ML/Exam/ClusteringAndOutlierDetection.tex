@@ -357,11 +357,133 @@
     
     \subsubsection{DBSCAN}
     
+    The basic idea of DBSCAN is that:
+    \begin{itemize}
+        \item Each object in a density-based cluster $C$ is density-reachable 
+        from any of its core-objects
+        \item Nothing else is density-reachable from core objects
+    \end{itemize}
+    We can then set up the following algorithm:
+    \begin{algorithm}
+        \caption{DBSCAN}
+        \begin{algorithmic}
+            \ForAll{$o \in D$}
+                \If{$o$ is not yet classified}
+                    \If{$o$ is a core-object}
+                        \State Collect all objects density-reachable from $o$ 
+                        and assign them to a new cluster
+                    \Else
+                        \State Assign $o$ to NOISE
+                    \EndIf
+                \EndIf
+            \EndFor
+        \end{algorithmic}
+        Running time: \bigO{n * N_\epsilon}\\
+        Running time without support: \bigO{n^2}\\
+        Running time with tree-based support: \bigO{n\cdot \log(n)}\\
+        Running time with direct access to neighbourhood \bigO{n}
+    \end{algorithm}
+    
+    The issue here is selecting the parameters $\epsilon$ and $MinPts$. An idea 
+    would be to use the point density of the least dense cluster in the 
+    data-set as parameters. Then it would find both the least and the more 
+    dense clusters, but how do we determine these least-dense parameters? A 
+    heuristic is to look at the distances to the $k$-nearest neighbours.
+    
+    The main issue with DBSCAN is that if there are clusters with more than one 
+    density, then a single $\epsilon$ wont suffice.
+    
     \subsubsection{DENCLUE}
+    DenClue works by estimating the density function and find an arbitrarily 
+    shaped cluster such that each point $x \in C$ is attracted to some 
+    attractor $x_i^*$. Each density attractor has density above $\xi$, that is 
+    $\hat{f}(x_i^*) \geq \xi$. And any such two density attractors are 
+    \textit{density reachable} (such that for all points between them, 
+    $\hat{f}(y) \geq \xi$).
+    % Not gonna go into depths with this here, as I'm not going to be able to 
+    %learn it in time for exam.
     
     %TODO \subsection{Hierarchical clustering}
     
     \subsection{Subspace clustering}
+    In high dimensional spaces, a phenomenon called \textit{Curse of 
+    Dimensionality} occurs. Consider a $d$-dimensional query point $Q$ and $N$ 
+    $d$-dimensional sample points $X_1,\cdots,X_N$. We then have that:
+    \begin{align*}
+        DMIN_d&=\min\{dist_2(x_i,Q) | 1 \leq i \leq N\}\\
+        DMAX_d&=\max\{dist_2(x_i,Q) | 1 \leq i \leq N\}\\
+        \lim_{d\rightarrow \infty} \Pr[DMAX_d \leq (1+\epsilon)DMIN_d] = 1
+    \end{align*}
+    That is, the probability that $DMAX$ is $\epsilon$ close to $DMIN$ 
+    converges to $1$. In other words, distance functions use their 
+    functionality.
+    
+    Subspace clustering is about identifying clusters in any subspace of the 
+    full dimensionality.
+    
+    \subsubsection{CLIQUE}
+    One of the first approaches to the subspace clustering problem is the 
+    CLIQUE method. CLIQUE is a grid-based algorithm which recursively navigates 
+    through the set of possible subspaces in a bottom-up way.
+    
+    In CLIQUE, each subset is split into blocks of width $\xi$, called units. 
+    All units which exceed a threshold $\tau$ are retained. $\xi$ and $\tau$ 
+    are the input parameters of CLIQUE. We start with 1-dimensional dense 
+    units, and then the step from $(k-1)$ to $k$ can be described as taking the 
+    $(k-1)$-dimensional units as candidates and then all the candidates which 
+    have the first $(k-2)$ dimensions in common.
+    
+    The big drawback is the high dependency of grid placement. It runs linear 
+    in $n$ superlinear in $d$.
+    
+    \subsubsection{SUBCLU}
+    SUBCLU is an extension of DBSCAN. We want to use the density-connected 
+    properties in individual subspaces, in order to detect clusters in high 
+    dimensional spaces as well. One straightforward approach would be to run 
+    DBSCAN in all possible subspaces, however there is $2^d$ subspaces.
+    
+    A more efficient approach would be if we could use the clustering 
+    information of previous subspaces in the process of generating all clusters 
+    and drop all subspaces that cannot contain density-connected clusters. 
+    However, density connected clusters are not monotonic, i.e. if a cluster 
+    $C$ is density connected in $S \subseteq A$ then $C$ need not be a 
+    density-connected cluster in $T \subseteq S$, as it may not be the maximal 
+    cluster w.r.t. density-reachability anymore. 
+    
+    However, density-connected sets are monotonic, i.e. if $C$ is density 
+    connected in $S$, then it is also density-connected in $T$. We get that for 
+    all $C \subseteq D$ which is a cluster in $S \subseteq A$ and $T \subseteq 
+    S$:
+    
+    \begin{itemize}
+        \item $o$ is a core object in $S$ $\implies$ $o$ is a core object in 
+        $T$.
+        \item $o$ is directly density reachable from $q$ in $S$ $\implies$ $o$ 
+        is directly density reachable from $q$ in $T$.
+        \item $o$ is density-reachable from $in$ in $s$ $\implies$ $o$ is 
+        density reachable from $q$ in $T$.
+        \item $o$ is density-connected to $q$ in $S$ $\implies$ $o$ is 
+        density-connected to $q$ in $T$.
+        \item $o$ and $q$ is part of a connected set in $S$ $\implies$ $o$ and 
+        $q$ is part of a connected in $T$.
+    \end{itemize}
+
+    We can inverse this, and say that if we e.g. have a set in space $AB$ then 
+    then if $p$ and $q$ are connected in $A$ but not in $B$ then they wont be 
+    connected in $AB$. The key idea here, is that we do not have to examine any 
+    subspace $S$ if at least on $T_i \subset S$ contains no cluster (i.e. a 
+    density connected set). reversely, if all $T_i \subset S$ contain clusters, 
+    then we have to test $S$.
+    
+    SUBCLU is based on based on a bottom-up, greedy algorithm to detect 
+    density-connected clusters in all subspaces of high dimensional data.
+    
+    The SUBCLU algorithm has automatic detection of subspaces with clusters, 
+    automatic detection of clusters and no assumptions regarding data 
+    distributions. The drawbacks are that the parameter settings highly affect 
+    clustering results, they are challenged by large differences in densities 
+    and computation is at least \bigO{n^2} and typically much greater. However 
+    the results are much better than that of CLIQUE.
     
     \subsection{Measuring the quality of a clustering}
     For choosing $k$, one idea could be to determine the clustering for 
